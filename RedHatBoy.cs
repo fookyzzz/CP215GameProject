@@ -34,7 +34,7 @@ namespace Game07
             sprite.Scale = scalingVector;
             Add(sprite);
 
-            var texture = TextureCache.Get("RedHatBoy.png");
+            var texture = TextureCache.Get("../../../Resource/RedHatBoy.png");
             var fragments = FragmentArray.Create(texture, 64, 64);
             stay = new Animation(sprite, fragments.SubArray(0, 2), 1.0f);
             up = new Animation(sprite, fragments.SubArray(12, 4), 1.0f);
@@ -135,24 +135,35 @@ namespace Game07
 
         private bool IsAllowMove(Vector2f direction)
         {
-            Vector2i index = tileMap.CalcIndex(this, direction);
-            return tileMap.IsInside(index) && IsAllowTile(index);
+            //Check TileMap
+            //Vector2i index = tileMap.CalcIndex(this, direction);
+            //return tileMap.IsInside(index) && IsAllowTile(index);
+
+            //Check TileMapOverlay
+            Vector2i index = tileMapOverlay.CalcIndex(this, direction);
+            return tileMapOverlay.IsInside(index) && IsAllowTile(index);
         }
 
         private bool IsAllowTile(Vector2i index)
         {
-            int tileCode = tileMap.GetTileCode(index);
+            //int tileCode = tileMap.GetTileCode(index);
+            int tileCode = tileMapOverlay.GetTileCode(index);
             return
+                //TileSet1
+
                 //WaterTile
-                tileCode != 6 && tileCode != 7 && tileCode != 8 && tileCode != 9 && tileCode != 10 && tileCode != 11 && tileCode != 21 && tileCode != 22 &&
-                tileCode != 23 && tileCode != 24 && tileCode != 26 && tileCode != 36 && tileCode != 37 && tileCode != 38 && tileCode != 39 && tileCode != 40 &&
-                tileCode != 41 && tileCode != 189 && tileCode != 190 && tileCode != 191 && tileCode != 192 && tileCode != 193 && tileCode != 194 && tileCode != 204 &&
-                tileCode != 205 && tileCode != 206 && tileCode != 207 && tileCode != 209 && tileCode != 219 && tileCode != 220 && tileCode != 221 && tileCode != 222 &&
-                tileCode != 223 && tileCode != 224 && tileCode != 48 &&
+                //tileCode != 6 && tileCode != 7 && tileCode != 8 && tileCode != 9 && tileCode != 10 && tileCode != 11 && tileCode != 21 && tileCode != 22 &&
+                //tileCode != 23 && tileCode != 24 && tileCode != 26 && tileCode != 36 && tileCode != 37 && tileCode != 38 && tileCode != 39 && tileCode != 40 &&
+                //tileCode != 41 && tileCode != 189 && tileCode != 190 && tileCode != 191 && tileCode != 192 && tileCode != 193 && tileCode != 194 && tileCode != 204 &&
+                //tileCode != 205 && tileCode != 206 && tileCode != 207 && tileCode != 209 && tileCode != 219 && tileCode != 220 && tileCode != 221 && tileCode != 222 &&
+                //tileCode != 223 && tileCode != 224 && tileCode != 48 &&
                 //RockTile
-                tileCode != 105 && tileCode != 106 && tileCode != 107 && tileCode != 108 && tileCode != 109 && tileCode != 122 && tileCode != 124 && tileCode != 137 &&
-                tileCode != 138 && tileCode != 139 && tileCode != 144 && tileCode != 145 && tileCode != 146 && tileCode != 159 && tileCode != 160 && tileCode != 161 &&
-                tileCode != 174 && tileCode != 175 && tileCode != 176;
+                //tileCode != 105 && tileCode != 106 && tileCode != 107 && tileCode != 108 && tileCode != 109 && tileCode != 122 && tileCode != 124 && tileCode != 137 &&
+                //tileCode != 138 && tileCode != 139 && tileCode != 144 && tileCode != 145 && tileCode != 146 && tileCode != 159 && tileCode != 160 && tileCode != 161 &&
+                //tileCode != 174 && tileCode != 175 && tileCode != 176;
+
+                //TileSet2
+                tileCode != 84 && tileCode != 85 && tileCode != 86 && tileCode != 88 && tileCode != 89 && tileCode != 90 && tileCode != 98 && tileCode != 99 && tileCode != 100 && tileCode != 103;
         }
 
         public override void PhysicsUpdate(float fixTime)
