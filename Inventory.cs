@@ -1,5 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
+using System;
 
 namespace GameLib
 {
@@ -24,20 +26,47 @@ namespace GameLib
 
             Add(tileMap);
             Add(highlight);
+
+            highlight.index = new Vector2i(0, 0);
         }
 
-        public override void MouseMoved(MouseMoveArguments e)
+        public override void KeyPressed(KeyEventArgs e)
         {
-            base.MouseMoved(e);
-            var inverseTransform = tileMap.GlobalTransform.GetInverse();
-            var pointInTilemap = inverseTransform.TransformPoint(e.Point);
-            var index = tileMap.CalcIndex(pointInTilemap);
-
-            if (tileMap.IsOutside(index))
-                highlight.index = new Vector2i(-1, -1);
-            else
-                highlight.index = index;
+            base.KeyPressed(e);
+            if (e.Code == Keyboard.Key.Space)
+                OnClick(highlight.index);
         }
+
+        public override void MouseWheelScrolled(MouseWheelScrollArguments e)
+        {
+            base.MouseWheelScrolled(e);
+            if (e.Delta > 0)
+            {
+                if ((highlight.index - new Vector2i(0, 1)).Y < 0)
+                    return;
+                highlight.index = highlight.index - new Vector2i(0, 1);
+            }
+            else
+            {
+                if ((highlight.index + new Vector2i(0, 1)).Y > counts.GetLength(0) - 1)
+                    return;
+                highlight.index = highlight.index + new Vector2i(0, 1);
+            }
+        }
+
+        //public override void MouseMoved(MouseMoveArguments e)
+        //{
+        //    base.MouseMoved(e);
+        //    var inverseTransform = tileMap.GlobalTransform.GetInverse();
+        //    var pointInTilemap = inverseTransform.TransformPoint(e.Point);
+        //    var index = tileMap.CalcIndex(pointInTilemap);
+
+        //    if (tileMap.IsOutside(index))
+        //        highlight.index = new Vector2i(-1, -1);
+        //    else
+        //        highlight.index = index;
+        //}
+
         public override void MouseButtonPressed(MouseButtonArguments e)
         {
             base.MouseButtonPressed(e);
