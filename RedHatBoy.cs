@@ -129,7 +129,7 @@ namespace Game07
             if (!IsAllowMove(direction))
                 return;
 
-            motion = new LinearMotion(this, 300, direction * tileSize);
+            motion = new LinearMotion(this, 200, direction * tileSize);
 
         }
 

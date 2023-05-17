@@ -5,36 +5,65 @@ namespace GameLib
 {
     public class Label : Group
     {
-        public string FontName { get; init; } = "Thasadith-Regular.ttf";
-        public Color TextColor { get; init; } = Color.Blue;
-        public Color BgColor { get; init; } = Color.White;
-        public float HMargin { get; init; } = 0;
-        public float VMargin { get; init; } = 0;
-        public Label(string str, string fontName, uint fontsize)
+        public Font Font { get => _font; set { _font = value; Update(); } }
+        Font _font;
+        public Color TextColor { get => textColor; set { textColor = value; Update(); } }
+        Color textColor = Color.Blue;
+        public Color BgColor { get => bgColor; set { bgColor = value; Update(); } }
+        Color bgColor = Color.White;
+        public float HMargin { get => hMargin; set { hMargin = value; Update(); } }
+        float hMargin = 0;
+        public float VMargin { get => vMargin; set { vMargin = value; Update(); } }
+        float vMargin = 0;
+        public string StrText { get { return str;  } set { str = value; Update(); } }
+        string str;
+
+        public uint FontSize { get => fontSize; set { fontSize = value; Update(); } }
+        uint fontSize;
+
+        bool sizeBasedOnText;
+        float bgHSize;
+
+        //public TextEntity TextEntity;
+        //public Shape BgShape;
+        public Label(string str, Font font, uint fontSize)
         {
-            this.FontName = fontName;
-            Create(str, fontsize);
+            _font = font;
+            this.str = str;
+            this.fontSize = fontSize;
+            sizeBasedOnText = true;
+            Update();
         }
-        public Label(string str, uint fontsize)
+        public Label(string str, Font font, uint fontSize, float horizontalSize)
         {
-            Create(str, fontsize);
+            _font = font;
+            this.str = str;
+            this.fontSize = fontSize;
+            sizeBasedOnText = false;
+            this.bgHSize = horizontalSize;
+            Update();
         }
-        private void Create(string str, uint fontsize)
+        private void Update()
         {
             this.Clear();
-            var font = FontCache.Get(FontName);
-            var text = new TextEntity(str, font, fontsize);
+            var text = new TextEntity(StrText, _font, fontSize);
             text.FillColor = TextColor;
+
             text.Position += new Vector2f(HMargin, VMargin);
 
+            float bgHorSize;
+            if (sizeBasedOnText)
+                bgHorSize = text.TotalWidth() + 2 * HMargin;
+            else
+                bgHorSize = this.bgHSize;
             var rect = new RectangleEntity(
-                            new Vector2f(text.TotalWidth() + 2 * HMargin, 
+                            new Vector2f(bgHorSize,
                                         text.TotalHeight() + 2 * VMargin));
             rect.FillColor = BgColor;
 
             this.Add(rect);
             this.Add(text);
-            DebugPositions(text);
+            //DebugPositions(text);
         }
 
         private void DebugPositions(TextEntity text)
