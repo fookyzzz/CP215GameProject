@@ -24,7 +24,7 @@ namespace GameProject
         Player player;
         RedHatBoy redHatBoy;
         ImageButton testButton;
-
+        
         Font font = new Font(FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"));
 
         const int scaling = 3;
@@ -166,5 +166,7 @@ namespace GameProject
             sprite.Scale = scalingVector; //Scale ค่อยมาขยายต่อ Origin ดังนั้น Origin จะอยู่ตรงกลางอยู่
             return sprite;
         }
+
+        //Planting
     }
 }
