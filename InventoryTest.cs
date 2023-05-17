@@ -15,7 +15,7 @@ namespace Game14
             inventory.Position = new Vector2f(0, 0);
             Add(inventory);
 
-            var texture = TextureCache.Get("Items.jpg");
+            var texture = TextureCache.Get("../../../Resource/Items.jpg");
             fragments = FragmentArray.Create(texture, 600, 600);
 
             inventory.SetItem(new Vector2i(0, 0), 5, 9);
