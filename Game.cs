@@ -119,7 +119,7 @@ namespace GameProject
             //visual.Add(player);
 
             redHatBoy = new RedHatBoy(scalingVector/scaling, tileMap, tileMapOverlay, tileSize);
-            redHatBoy.Position = new Vector2f(tileSize * 3, tileSize * 3);
+            redHatBoy.Position = new Vector2f(tileSize * 3, tileSize * 2);
             visual.Add(redHatBoy);
 
             var shopBtn = new SpriteEntity("../../../Resource/ShopBtnRound.png") { Scale = new Vector2f(0.15f, 0.15f)};
