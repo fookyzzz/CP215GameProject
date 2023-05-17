@@ -22,6 +22,7 @@ namespace GameProject
         TileMap<SpriteEntity> tileMapOverlay;
         Player player;
         RedHatBoy redHatBoy;
+        Button testButton;
 
         const int scaling = 3;
         const int tileSize = 16 * scaling;
