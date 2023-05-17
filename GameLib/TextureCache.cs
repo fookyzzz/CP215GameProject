@@ -16,7 +16,7 @@ namespace GameLib
             if (cache.TryGetValue(filename, out texture)) 
                 return texture;
 
-            texture = new Texture(filename);
+            texture = new Texture(filename) ;
             texture.GenerateMipmap();
             cache[filename] = texture;
             return texture;
