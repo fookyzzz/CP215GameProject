@@ -132,12 +132,14 @@ namespace GameProject
         public void GameMain()
         {
             allObjs.Add(visual);
-            allObjs.Add(new InventoryTest() { Position = new Vector2f(tileSize, tileSize * 2)});
+            allObjs.Add(new InventoryTest(fragments) { Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f)});
             allObjs.Add(this);
             //visual.Add(CreateTile(2));
 
             //SlideShow();
+            var icon = new Image("../../../Resource/farm_icon.png");
 
+            window.SetIcon(icon.Size.X, icon.Size.Y, icon.Pixels);
             window.SetKeyRepeatEnabled(false);
             window.RunGameLoop(allObjs);
         }

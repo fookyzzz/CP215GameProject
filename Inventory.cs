@@ -21,7 +21,7 @@ namespace GameLib
             tileSize = slotSize;
             highlight = new Highlight(tileSize);
             tileMap = new TileMap<T>(tileSize, tileArray, createTile, true);
-            tileMap.BgColor = Color.White;
+            tileMap.BgColor = Color.Yellow;
             counts = new int[tileArray.GetLength(0), tileArray.GetLength(1)];
 
             Add(tileMap);
@@ -67,14 +67,14 @@ namespace GameLib
         //        highlight.index = index;
         //}
 
-        public override void MouseButtonPressed(MouseButtonArguments e)
-        {
-            base.MouseButtonPressed(e);
-            if (tileMap.IsOutside(highlight.index))
-                return;
+        //public override void MouseButtonPressed(MouseButtonArguments e)
+        //{
+        //    base.MouseButtonPressed(e);
+        //    if (tileMap.IsOutside(highlight.index))
+        //        return;
 
-            OnClick(highlight.index);
-        }
+        //    OnClick(highlight.index);
+        //}
 
         public void SetItem(Vector2i index, int itemCode, int count)
         {
@@ -123,7 +123,7 @@ namespace GameLib
         {
             var text = new TextEntity(msg, FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"), 20);
             text.Origin = text.TotalSize();
-            text.Position = tileMap.RightBottomCorner(index) - new Vector2f(5, 0);
+            text.Position = tileMap.RightBottomCorner(index) - new Vector2f(2, 2);
             text.FillColor = Color.Black;
             return text;
         }

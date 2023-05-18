@@ -9,35 +9,43 @@ namespace Game14
     {
         Inventory<SpriteEntity> inventory;
         FragmentArray fragments;
-        public InventoryTest()
+        public InventoryTest(FragmentArray fragments)
         {
-            inventory = new Inventory<SpriteEntity>(60, CreateArray(), CreateTile);
+            inventory = new Inventory<SpriteEntity>(56, CreateArray(), CreateTile);
             inventory.Position = new Vector2f(0, 0);
             Add(inventory);
 
-            var texture = TextureCache.Get("../../../Resource/Items.jpg");
-            fragments = FragmentArray.Create(texture, 600, 600);
+            //var texture = TextureCache.Get("../../../Resource/Items.jpg");
+            this.fragments = fragments;
 
-            inventory.SetItem(new Vector2i(0, 0), 5, 9);
-            inventory.SetItem(new Vector2i(0, 1), 4, 9);
+            inventory.SetItem(new Vector2i(0, 0), 38 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 1), 43 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 2), 48 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 3), 53 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 4), 58 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 5), 34 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 6), 39 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 7), 44 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 8), 49 + 1, 9);
+            inventory.SetItem(new Vector2i(0, 9), 54 + 1, 9);
 
             inventory.OnClick += Inventory_OnClick;
         }
 
         private int[,] CreateArray()
         {
-            int[,] array = new int[9, 1];
+            int[,] array = new int[10, 1];
 
             return array;
         }
 
         private SpriteEntity CreateTile(int code)
         {
-            if (code >= 1 && code <= 9)
+            if (code >= 1 && code <= 169)
             {
                 var sprite = new SpriteEntity(fragments.Fragments[code - 1]);
-                sprite.Origin = new Vector2f(300, 300);
-                sprite.Scale = new Vector2f(1 / 12f, 1 / 12f);
+                sprite.Origin = new Vector2f(8, 8);
+                sprite.Scale = new Vector2f(2.5f, 2.5f);
                 return sprite;
             }
             else
