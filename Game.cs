@@ -64,6 +64,8 @@ namespace GameProject
             testButton.Position = new Vector2f(-16, 600);
             visual.Add(testButton);
 
+            allObjs.Add(new SoundTest());
+
             //Inventory
             inventory = new InventoryTest(fragments,tileMap, tileMapOverlay, redHatBoy, tileSize);
             inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
