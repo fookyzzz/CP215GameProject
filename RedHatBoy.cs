@@ -172,5 +172,7 @@ namespace Game07
             motion.Update(fixTime);
             SmoothMovement();
         }
+
+        public LinearMotion GetMotion() { return motion; }
     }
 }

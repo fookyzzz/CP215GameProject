@@ -1,6 +1,8 @@
 ﻿using GameLib;
+using GameProject;
 using SFML.Graphics;
 using SFML.System;
+using System;
 using System.Diagnostics;
 
 namespace Game14
@@ -9,7 +11,19 @@ namespace Game14
     {
         Inventory<SpriteEntity> inventory;
         FragmentArray fragments;
-        public InventoryTest(FragmentArray fragments)
+
+        TileMap<SpriteEntity> tileMap, tileMapOverlay;
+        Group redHatBoy;
+        int tileSize;
+
+        Planting plant;
+        const int carrotSproutCode = 37;
+        const int cabbageSproutCode = 42;
+        const int radishSproutCode = 47;
+        const int strawberrySproutCode = 52;
+        const int cornSproutCode = 57;
+
+        public InventoryTest(FragmentArray fragments, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize)
         {
             inventory = new Inventory<SpriteEntity>(56, CreateArray(), CreateTile);
             inventory.Position = new Vector2f(0, 0);
@@ -30,6 +44,13 @@ namespace Game14
             inventory.SetItem(new Vector2i(0, 9), 54 + 1, 9);
 
             inventory.OnClick += Inventory_OnClick;
+
+            this.tileMapOverlay = tileMapOverlay;
+            this.tileMap = tileMap;
+            this.redHatBoy = redHatBoy;
+            this.tileSize = tileSize;
+
+            plant = new Planting(fragments);
         }
 
         private int[,] CreateArray()
@@ -61,8 +82,11 @@ namespace Game14
                     ShowMessage("  Out of stock  ");
                     return;
                 }
+                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, carrotSproutCode))
+                    return;
                 ShowMessage("  Plant a carrot  ");
                 inventory.AdjustCount(index, -1);
+                
 
                 //Planting Method
             }

@@ -30,6 +30,8 @@ namespace GameProject
         const int scaling = 3;
         const int tileSize = 16 * scaling;
         Vector2f scalingVector = new Vector2f(scaling, scaling);
+
+        InventoryTest inventory;
         public Game()
         {
             visual.Position = new Vector2f(tileSize / 2, tileSize / 2);
@@ -39,7 +41,6 @@ namespace GameProject
 
             //TileMap For Scene
             tileMap = new GameScene().GetTileMap();
-            //tileMap.SetTile(new Vector2i(redHatBoy.Position.X / tileSize, redHatBoy.Position.Y / tileSize), 0);
             visual.Add(tileMap);
 
             //TileMap For Plant
@@ -61,15 +62,20 @@ namespace GameProject
             testButton.Position = new Vector2f(-16, 600);
             visual.Add(testButton);
 
+            //Inventory
+            inventory = new InventoryTest(fragments,tileMap, tileMapOverlay, redHatBoy, tileSize);
+            inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
 
+            //Planting
         }
 
         public void GameMain()
         {
             allObjs.Add(visual);
-            allObjs.Add(new InventoryTest(fragments) { Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f)});
+            allObjs.Add(inventory);
             allObjs.Add(this);
             //visual.Add(CreateTile(2));
+            
 
             //SlideShow();
             var icon = new Image("../../../Resource/farm_icon.png");
