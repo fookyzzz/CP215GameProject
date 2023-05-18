@@ -35,21 +35,21 @@ namespace GameProject
         {
             base.KeyPressed(e);
 
-            if (e.Code == Keyboard.Key.S) // เสียงปลูกพีช
+            if (e.Code == Keyboard.Key.Space) // เสียงปลูกพีช
             {
                 Sound sound = new Sound(bufferPlant);
                 sound.Play();
             }
 
             // เสียงเก็บของ
-            if (e.Code == Keyboard.Key.V) 
+            if (e.Code == Keyboard.Key.Q) 
             {
                 Sound sound1 = new Sound(bufferCollect);
                 sound1.Play();
             }
 
             //เสียงเดิน ขวา ซ้าย บน ล่าง
-            if (e.Code == Keyboard.Key.Left || e.Code == Keyboard.Key.Right || e.Code == Keyboard.Key.Up || e.Code == Keyboard.Key.Down)  
+            if (e.Code == Keyboard.Key.A || e.Code == Keyboard.Key.D || e.Code == Keyboard.Key.W || e.Code == Keyboard.Key.S)  
             {
                 Sound sound2 = new Sound(bufferWalk);
                 sound2.Play();
