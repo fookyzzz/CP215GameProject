@@ -129,7 +129,7 @@ namespace Game07
             if (!IsAllowMove(direction))
                 return;
 
-            motion = new LinearMotion(this, 200, direction * tileSize);
+            motion = new LinearMotion(this, 175, direction * tileSize);
 
         }
 
@@ -163,7 +163,13 @@ namespace Game07
                 //tileCode != 174 && tileCode != 175 && tileCode != 176;
 
                 //TileSet2
-                tileCode != 84 && tileCode != 85 && tileCode != 86 && tileCode != 88 && tileCode != 89 && tileCode != 90 && tileCode != 98 && tileCode != 99 && tileCode != 100 && tileCode != 103;
+                //Fence
+                tileCode != 84 && tileCode != 85 && tileCode != 86 && tileCode != 88 && tileCode != 89 && tileCode != 90 && tileCode != 98 && tileCode != 99 && tileCode != 100 && tileCode != 103 &&
+                //Tree
+                tileCode != 145 && tileCode != 146 && tileCode != 147 && tileCode != 148 && tileCode != 149 && tileCode != 150 && tileCode != 151 && tileCode != 152 &&
+                tileCode != 158 && tileCode != 159 && tileCode != 160 && tileCode != 161 && tileCode != 162 && tileCode != 163 && tileCode != 164 && tileCode != 165 &&
+                //Store
+                tileCode != 143 && tileCode != 144 && tileCode != 156 && tileCode != 157;
         }
 
         public override void PhysicsUpdate(float fixTime)

@@ -75,6 +75,8 @@ namespace Game14
 
         private void Inventory_OnClick(Vector2i index)
         {
+            if (index.Y > 4)
+                return;
             if (!plant.CheckTileForPlant(tileMap, tileMapOverlay, redHatBoy))
             {
                 ShowMessage("  Can't plant here  ");
