@@ -32,6 +32,8 @@ namespace GameProject
         Vector2f scalingVector = new Vector2f(scaling, scaling);
 
         InventoryTest inventory;
+
+        Score score;
         public Game()
         {
             visual.Position = new Vector2f(tileSize / 2, tileSize / 2);
@@ -67,6 +69,12 @@ namespace GameProject
             inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
 
             //Planting
+
+            //Score
+            score = new Score();
+            score.Position = new Vector2f(0, 0);
+            visual.Add(score);
+
         }
 
         public void GameMain()
