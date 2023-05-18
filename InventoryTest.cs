@@ -54,15 +54,73 @@ namespace Game14
 
         private void Inventory_OnClick(Vector2i index)
         {
-            ShowMessage("Click At index:" + index);
-            inventory.AdjustCount(index, -1);
+            if (index == new Vector2i(0, 0))
+            {
+                if (inventory.GetCount(index) == 0)
+                {
+                    ShowMessage("  Out of stock  ");
+                    return;
+                }
+                ShowMessage("  Plant a carrot  ");
+                inventory.AdjustCount(index, -1);
+
+                //Planting Method
+            }
+            if (index == new Vector2i(0, 1))
+            {
+                if (inventory.GetCount(index) == 0)
+                {
+                    ShowMessage("  Out of stock  ");
+                    return;
+                }
+                ShowMessage("  Plant a cabbage  ");
+                inventory.AdjustCount(index, -1);
+
+                //Planting Method
+            }
+            if (index == new Vector2i(0, 2))
+            {
+                if (inventory.GetCount(index) == 0)
+                {
+                    ShowMessage("  Out of stock  ");
+                    return;
+                }
+                ShowMessage("  Plant a strawberry  ");
+                inventory.AdjustCount(index, -1);
+
+                //Planting Method
+            }
+            if (index == new Vector2i(0, 3))
+            {
+                if (inventory.GetCount(index) == 0)
+                {
+                    ShowMessage("  Out of stock  ");
+                    return;
+                }
+                ShowMessage("  Plant a corn  ");
+                inventory.AdjustCount(index, -1);
+
+                //Planting Method
+            }
+            if (index == new Vector2i(0, 4))
+            {
+                if (inventory.GetCount(index) == 0)
+                {
+                    ShowMessage("  Out of stock  ");
+                    return;
+                }
+                ShowMessage("  Plant a radish  ");
+                inventory.AdjustCount(index, -1);
+
+                //Planting Method
+            }
         }
 
         private void ShowMessage(string message)
         {
             var group = new Group();
             var font = FontCache.Get("../../../Resource/DSN_Sukumwit.ttf");
-            var label = new Label(message, font, 50) { Position = new Vector2f(200, 200) };
+            var label = new Label(message, font, 50) { Position = new Vector2f(500, 500) };
             group.Add(label);
 
             Add(group);
