@@ -12,12 +12,10 @@ namespace GameProject
 {
     public class SoundTest : BlankEntity
     {
-        SoundBuffer bufferPlant = new SoundBuffer("../../../Resource/Plant.wav");
-        SoundBuffer bufferCollect = new SoundBuffer("../../../Resource/Collect.ogg");
-        SoundBuffer bufferWalk = new SoundBuffer("../../../Resource/Walk.ogg");
+        
         SoundBuffer bufferOpenStore = new SoundBuffer("../../../Resource/Open_Store.ogg");
         SoundBuffer bufferOpen = new SoundBuffer("../../../Resource/Open.ogg");     
-        Music music = new Music("../../../Resource/Sound_Music_2.ogg");
+        
 
         public bool Right { get; private set; }
 
@@ -25,8 +23,7 @@ namespace GameProject
         // loop เพลง
         //public SoundTest()
         //{
-        //    music.Loop = true;
-        //    music.Play();
+        
         //}
 
 
@@ -37,22 +34,19 @@ namespace GameProject
 
             if (e.Code == Keyboard.Key.Space) // เสียงปลูกพีช
             {
-                Sound sound = new Sound(bufferPlant);
-                sound.Play();
+                
             }
 
             // เสียงเก็บของ
             if (e.Code == Keyboard.Key.Q) 
             {
-                Sound sound1 = new Sound(bufferCollect);
-                sound1.Play();
+                
             }
 
             //เสียงเดิน ขวา ซ้าย บน ล่าง
             if (e.Code == Keyboard.Key.A || e.Code == Keyboard.Key.D || e.Code == Keyboard.Key.W || e.Code == Keyboard.Key.S)  
             {
-                Sound sound2 = new Sound(bufferWalk);
-                sound2.Play();
+                
             }
         }
 

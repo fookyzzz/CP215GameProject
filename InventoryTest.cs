@@ -1,5 +1,6 @@
 ﻿using GameLib;
 using GameProject;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -22,6 +23,10 @@ namespace Game14
         const int radishSproutCode = 47;
         const int strawberrySproutCode = 52;
         const int cornSproutCode = 57;
+
+        Sound sound;
+        SoundBuffer bufferPlant = new SoundBuffer("../../../Resource/Plant.wav");
+        SoundBuffer bufferError = new SoundBuffer("../../../Resource/Error.ogg");
 
         public InventoryTest(FragmentArray fragments, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize)
         {
@@ -80,11 +85,15 @@ namespace Game14
             if (!plant.CheckTileForPlant(tileMap, tileMapOverlay, redHatBoy))
             {
                 ShowMessage("  Can't plant here  ");
+                sound = new Sound(bufferError);
+                sound.Play();
                 return;
             }
             if (inventory.GetCount(index) == 0)
             {
                 ShowMessage("  Out of stock  ");
+                sound = new Sound(bufferError);
+                sound.Play();
                 return;
             }
 
@@ -99,6 +108,8 @@ namespace Game14
             if (index == new Vector2i(0, 4))
                 plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cornSproutCode);
             inventory.AdjustCount(index, -1);
+            sound = new Sound(bufferPlant);
+            sound.Play();
         }
 
         private void ShowMessage(string message)

@@ -2,6 +2,7 @@
 using Game11;
 using Game14;
 using GameLib;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -34,6 +35,8 @@ namespace GameProject
         InventoryTest inventory;
 
         Score score;
+
+        Music music = new Music("../../../Resource/Sound_Music_2.ogg");
         public Game()
         {
             visual.Position = new Vector2f(tileSize / 2, tileSize / 2);
@@ -77,6 +80,10 @@ namespace GameProject
             score.Position = new Vector2f(0, 0);
             visual.Add(score);
 
+            //Music
+            music.Loop = true;
+            music.Volume = 20;
+            music.Play();
         }
 
         public void GameMain()

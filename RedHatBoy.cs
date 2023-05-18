@@ -1,5 +1,6 @@
 ﻿using Game11;
 using GameLib;
+using SFML.Audio;
 using SFML.System;
 using SFML.Window;
 using System;
@@ -22,11 +23,16 @@ namespace Game07
         TileMap<SpriteEntity> tileMapOverlay;
         int tileSize;
 
+        SoundBuffer bufferWalk = new SoundBuffer("../../../Resource/Walk.ogg");
+        Sound sound;
+
         public RedHatBoy(Vector2f scalingVector, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, int tileSize)
         {
             this.tileMap = tileMap;
             this.tileMapOverlay = tileMapOverlay;
             this.tileSize = tileSize;
+
+            sound = new Sound(bufferWalk);
 
             var sprite = new SpriteEntity();
             sprite.Position = new Vector2f(0, 0);
@@ -94,7 +100,13 @@ namespace Game07
         private void SmoothMovement()
         {
             if (!motion.IsFinished())
+            {
+                if (sound.Status == SoundStatus.Stopped)
+                    sound.Play();
+                if (sound.Status == SoundStatus.Playing)
+                    return;
                 return;
+            }
             Vector2f direction;
             if (keyQueue.Count > 0)
             {
@@ -124,7 +136,11 @@ namespace Game07
                 direction = DirectionKey.Normalized4;
             }
             else
+            {
                 Animate(stay); //direction = motion.GetNormalizedDirection();
+                sound.Stop();
+            }
+                
 
             if (!IsAllowMove(direction))
                 return;
