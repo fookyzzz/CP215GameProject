@@ -26,13 +26,13 @@ namespace GameLib
         public static Vector2f Direction4(Keyboard.Key key)
         {
             Vector2f direction = new Vector2f();
-            if (key == Keyboard.Key.Right)
+            if (key == Keyboard.Key.D)
                 direction += new Vector2f(1, 0);
-            if (key == Keyboard.Key.Left)
+            if (key == Keyboard.Key.A)
                 direction += new Vector2f(-1, 0);
-            if (key == Keyboard.Key.Up)
+            if (key == Keyboard.Key.W)
                 direction += new Vector2f(0, -1);
-            if (key == Keyboard.Key.Down)
+            if (key == Keyboard.Key.S)
                 direction += new Vector2f(0, 1);
             return direction;
         }
