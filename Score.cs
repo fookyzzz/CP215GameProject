@@ -11,7 +11,7 @@ namespace GameLib
         public Color FillColor { get; set; } = Color.Black;
         public Score()
         {
-            Font = FontCache.Get("cour.ttf");
+            Font = FontCache.Get("../../../Resource/DSN_Sukumwit.ttf");
         }
         public void Clear()
         {
