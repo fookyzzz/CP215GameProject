@@ -42,7 +42,7 @@ namespace GameProject
 
         public void SetTileForPlant(TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize, int tileCode)
         {
-            tileMapOverlay.SetTile(new Vector2i((int)MathF.Floor(redHatBoy.Position.X / tileSize), (int)MathF.Floor(redHatBoy.Position.Y / tileSize)), tileCode);
+            tileMapOverlay.SetTile(tileMapOverlay.CalcIndex(redHatBoy.Position), tileCode);
         }
 
         private SpriteEntity CreateTile(int code)
