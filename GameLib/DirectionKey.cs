@@ -12,13 +12,13 @@ namespace GameLib
             get
             {
                 Vector2f direction = new Vector2f();
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.D))
                     direction += new Vector2f(1, 0);
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.A))
                     direction += new Vector2f(-1, 0);
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.W))
                     direction += new Vector2f(0, -1);
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.S))
                     direction += new Vector2f(0, 1);
                 return direction;
             }
