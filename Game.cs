@@ -61,6 +61,8 @@ namespace GameProject
             testButton.Position = new Vector2f(-16, 600);
             visual.Add(testButton);
 
+            allObjs.Add(new SoundTest());
+
 
         }
 
