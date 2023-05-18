@@ -148,6 +148,15 @@ namespace Game14
             group.Add(label);
 
             Add(group);
+
+            var task = new DelayTask(2);
+            var task2 = new CallBackTask( delegate { Remove(group); });
+            var seqTask = new SequentialTask(task, task2);
+            Add(seqTask);
+            seqTask.Start();
+
+            //group.Remove(label);
+            //Add(group);
         }
     }
 }
