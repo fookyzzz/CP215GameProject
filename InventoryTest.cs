@@ -75,88 +75,28 @@ namespace Game14
 
         private void Inventory_OnClick(Vector2i index)
         {
+            if (!plant.CheckTileForPlant(tileMap, tileMapOverlay, redHatBoy))
+            {
+                ShowMessage("  Can't plant here  ");
+                return;
+            }
+            if (inventory.GetCount(index) == 0)
+            {
+                ShowMessage("  Out of stock  ");
+                return;
+            }
+
             if (index == new Vector2i(0, 0))
-            {
-                if (inventory.GetCount(index) == 0)
-                {
-                    ShowMessage("  Out of stock  ");
-                    return;
-                }
-                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, carrotSproutCode))
-                {
-                    ShowMessage("  Can't plant here  ");
-                    return;
-                }
-
-                inventory.AdjustCount(index, -1);
-                
-
-                //Planting Method
-            }
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, carrotSproutCode);
             if (index == new Vector2i(0, 1))
-            {
-                if (inventory.GetCount(index) == 0)
-                {
-                    ShowMessage("  Out of stock  ");
-                    return;
-                }
-                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cabbageSproutCode))
-                {
-                    ShowMessage("  Can't plant here  ");
-                    return;
-                }
-                inventory.AdjustCount(index, -1);
-
-                //Planting Method
-            }
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cabbageSproutCode);
             if (index == new Vector2i(0, 2))
-            {
-                if (inventory.GetCount(index) == 0)
-                {
-                    ShowMessage("  Out of stock  ");
-                    return;
-                }
-                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, radishSproutCode))
-                {
-                    ShowMessage("  Can't plant here  ");
-                    return;
-                }
-                inventory.AdjustCount(index, -1);
-
-                //Planting Method
-            }
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, radishSproutCode);
             if (index == new Vector2i(0, 3))
-            {
-                if (inventory.GetCount(index) == 0)
-                {
-                    ShowMessage("  Out of stock  ");
-                    return;
-                }
-                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, strawberrySproutCode))
-                {
-                    ShowMessage("  Can't plant here  ");
-                    return;
-                }  
-                inventory.AdjustCount(index, -1);
-
-                //Planting Method
-            }
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, strawberrySproutCode);
             if (index == new Vector2i(0, 4))
-            {
-                if (inventory.GetCount(index) == 0)
-                {
-                    ShowMessage("  Out of stock  ");
-                    return;
-                }
-                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cornSproutCode))
-                {
-                    ShowMessage("  Can't plant here  ");
-                    return;
-                }
-                inventory.AdjustCount(index, -1);
-
-                //Planting Method
-            }
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cornSproutCode);
+            inventory.AdjustCount(index, -1);
         }
 
         private void ShowMessage(string message)

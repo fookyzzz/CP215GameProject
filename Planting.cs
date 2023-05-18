@@ -28,7 +28,7 @@ namespace GameProject
             this.fragments = fragments;
         }
 
-        public bool SetTileForPlant(TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize, int tileCode)
+        public bool CheckTileForPlant(TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy)
         {
             Vector2i index = tileMapOverlay.CalcIndex(redHatBoy.Position);
             if (tileMap.GetTileCode(index) != soilCode)
@@ -37,8 +37,12 @@ namespace GameProject
                 tileMapOverlay.GetTileCode(index) == radishSproutCode || tileMapOverlay.GetTileCode(index) == strawberrySproutCode ||
                 tileMapOverlay.GetTileCode(index) == cornSproutCode)
                 return false;
-            tileMapOverlay.SetTile(new Vector2i((int)MathF.Floor(redHatBoy.Position.X / tileSize), (int)MathF.Floor(redHatBoy.Position.Y / tileSize)), tileCode);
             return true;
+        }
+
+        public void SetTileForPlant(TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize, int tileCode)
+        {
+            tileMapOverlay.SetTile(new Vector2i((int)MathF.Floor(redHatBoy.Position.X / tileSize), (int)MathF.Floor(redHatBoy.Position.Y / tileSize)), tileCode);
         }
 
         private SpriteEntity CreateTile(int code)
