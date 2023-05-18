@@ -83,8 +83,11 @@ namespace Game14
                     return;
                 }
                 if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, carrotSproutCode))
+                {
+                    ShowMessage("  Can't plant here  ");
                     return;
-                ShowMessage("  Plant a carrot  ");
+                }
+
                 inventory.AdjustCount(index, -1);
                 
 
@@ -97,7 +100,11 @@ namespace Game14
                     ShowMessage("  Out of stock  ");
                     return;
                 }
-                ShowMessage("  Plant a cabbage  ");
+                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cabbageSproutCode))
+                {
+                    ShowMessage("  Can't plant here  ");
+                    return;
+                }
                 inventory.AdjustCount(index, -1);
 
                 //Planting Method
@@ -109,7 +116,11 @@ namespace Game14
                     ShowMessage("  Out of stock  ");
                     return;
                 }
-                ShowMessage("  Plant a strawberry  ");
+                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, radishSproutCode))
+                {
+                    ShowMessage("  Can't plant here  ");
+                    return;
+                }
                 inventory.AdjustCount(index, -1);
 
                 //Planting Method
@@ -121,7 +132,11 @@ namespace Game14
                     ShowMessage("  Out of stock  ");
                     return;
                 }
-                ShowMessage("  Plant a corn  ");
+                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, strawberrySproutCode))
+                {
+                    ShowMessage("  Can't plant here  ");
+                    return;
+                }  
                 inventory.AdjustCount(index, -1);
 
                 //Planting Method
@@ -133,7 +148,11 @@ namespace Game14
                     ShowMessage("  Out of stock  ");
                     return;
                 }
-                ShowMessage("  Plant a radish  ");
+                if (!plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cornSproutCode))
+                {
+                    ShowMessage("  Can't plant here  ");
+                    return;
+                }
                 inventory.AdjustCount(index, -1);
 
                 //Planting Method
