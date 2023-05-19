@@ -19,10 +19,11 @@ namespace GameProject
         FullGameWindow window = new FullGameWindow(new VideoMode(1280, 720), "WoLF: World of Lovely Farm", true);
         Group allObjs = new Group();
         Group visual = new Group();
+        Group visualRain;
         FragmentArray fragments;
         TileMap<SpriteEntity> tileMap;
         TileMap<SpriteEntity> tileMapOverlay;
-        Player player;
+        //Player player;
         RedHatBoy redHatBoy;
         ImageButton shopBtn;
         
@@ -40,6 +41,8 @@ namespace GameProject
         ImageButton sleepBtn;
         RectangleEntity rect;
         Animation rainAnimation;
+        SpriteEntity spriteRain;
+        bool isRaining = false;
 
         Music music = new Music("../../../Resource/Sound_Music_2.ogg");
         public Game()
@@ -69,14 +72,12 @@ namespace GameProject
             shopBtn.ButtonClicked += ShopBtn_ButtonClicked;
             visual.Add(shopBtn);
 
-            //allObjs.Add(new SoundTest());
-
             //Inventory
             inventory = new CreateInventory(fragments);
             inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
 
             //Planting
-            planting = new Planting(inventory.GetInventory(), tileMap, tileMapOverlay, redHatBoy);
+            planting = new Planting(inventory.GetInventory(), tileMap, tileMapOverlay, redHatBoy, isRaining);
 
             //Money
             money = new Money();
@@ -102,13 +103,27 @@ namespace GameProject
             rect.FillColor = Color.Transparent;
 
             //Rain
-            var spriteRain = new SpriteEntity();
-            visual.Add(spriteRain);
+            spriteRain = new SpriteEntity();
+            spriteRain.Position = new Vector2f(80, 30);
+            //visualRain = new Group();
+            //visualRain.Add(spriteRain);
             var texture = TextureCache.Get("../../../Resource/RainSpriteSheet.png");
             var rainFragments = FragmentArray.Create(texture, 256, 240, 4, 4);
             rainAnimation = new Animation(spriteRain, rainFragments.SubArray(0, 4), 1.0f);
             spriteRain.Scale = new Vector2f(5, 3);
-            visual.Add(rainAnimation);
+            //visualRain.Add(rainAnimation);
+            //visual.Add(visualRain);
+
+            //Initial Rain Status
+            //if (RandomUtil.Next(0, 2) == 0)
+            //{
+            //    isRainning = false;
+            //    visual.Remove(visualRain);
+            //}
+            //else
+            //{
+            //    isRainning = true;
+            //}
         }
 
         private void ShopBtn_ButtonClicked(GenericButton button)
@@ -118,7 +133,6 @@ namespace GameProject
 
         private void SleepBtn_ButtonClicked(GenericButton button)
         {
-            //FadeOut Effect
             var transparentColor = Color.Transparent;
             var fadeOut = new Tween(255, 0, 1f,
                 delegate (float val)
@@ -133,17 +147,48 @@ namespace GameProject
                     rect.FillColor = new Color(0, 0, 0, (byte) val);
                     //label.TextColor = new Color(0, 0, 0, (byte)val);
                     //label.BgColor = new Color(255, 255, 255, (byte)val);
-                });
+                });            
 
             var task = new CallBackTask( delegate { planting.UpdatePlantForNextDay(); });
             var task2 = new CallBackTask( delegate { day.Increment(); });
             var task3 = new DelayTask(3);
             var task4 = new CallBackTask(delegate { redHatBoy.Position = new Vector2f(tileSize * 3, tileSize * 2); });
-            var seqTask = new SequentialTask(fadeIn, task, task2, task3, task4, fadeOut);
-            visual.Add(seqTask);
-            seqTask.Start();
+            var task5_0 = new CallBackTask(delegate
+            {
+                if (visualRain != null && isRaining)
+                {
+                    visual.Remove(visualRain);
+                    visualRain.Remove(spriteRain);
+                    visualRain.Remove(rainAnimation);
+                }
+                else if (visualRain != null && !isRaining)
+                {
+                    visualRain.Remove(spriteRain);
+                    visualRain.Remove(rainAnimation);
+                }
 
-            //Random Rain or Clear
+                visualRain = new Group();
+                visualRain.Add(spriteRain);
+                visualRain.Add(rainAnimation);
+            });
+            var task5_1 = new CallBackTask(delegate { visual.Add(visualRain); });
+            var task5_2 = new CallBackTask(delegate { visual.Remove(visualRain); });
+            var task6_1 = new CallBackTask(delegate { isRaining = true; });
+            var task6_2 = new CallBackTask(delegate { isRaining = false; });
+            var task7 = new CallBackTask(delegate { planting.SetIsRaining(isRaining); });
+            var task8 = new CallBackTask(delegate { planting.UpdatePlantWaterStatus(); });
+            if (RandomUtil.Next(0, 5) != 4)
+            {
+                var seqTask = new SequentialTask(fadeIn, task, task2, task3, task4, task5_0, task6_2, task7, task8, fadeOut);
+                visual.Add(seqTask);
+                seqTask.Start();
+            }
+            else
+            {
+                var seqTask = new SequentialTask(fadeIn, task, task2, task3, task4, task5_0, task5_1, task6_1, task7, task8, fadeOut);
+                visual.Add(seqTask);
+                seqTask.Start();
+            }
         }
 
         public void GameMain()
@@ -168,11 +213,11 @@ namespace GameProject
             window.RunGameLoop(allObjs);
         }
 
-        private void StepJumpMovement(KeyEventArgs e)
-        {
-            var direction = DirectionKey.Direction4(e.Code);
-            player.Position += direction * tileSize;
-        }
+        //private void StepJumpMovement(KeyEventArgs e)
+        //{
+        //    var direction = DirectionKey.Direction4(e.Code);
+        //    player.Position += direction * tileSize;
+        //}
 
         //private void SlideShow()
         //{
@@ -184,14 +229,14 @@ namespace GameProject
         //    visual.Add(animation);
         //}
 
-        private SpriteEntity CreateTile(int tileCode)
-        {
-            var fragment = fragments.Fragments[tileCode];
-            var sprite = new SpriteEntity(fragment);
-            sprite.Origin = new Vector2f(tileSize / scaling / 2, tileSize / scaling / 2); //Origin เกิดก่อนเป็นลำดับแรก
-            sprite.Scale = scalingVector; //Scale ค่อยมาขยายต่อ Origin ดังนั้น Origin จะอยู่ตรงกลางอยู่
-            return sprite;
-        }
+        //private SpriteEntity CreateTile(int tileCode)
+        //{
+        //    var fragment = fragments.Fragments[tileCode];
+        //    var sprite = new SpriteEntity(fragment);
+        //    sprite.Origin = new Vector2f(tileSize / scaling / 2, tileSize / scaling / 2); //Origin เกิดก่อนเป็นลำดับแรก
+        //    sprite.Scale = scalingVector; //Scale ค่อยมาขยายต่อ Origin ดังนั้น Origin จะอยู่ตรงกลางอยู่
+        //    return sprite;
+        //}
 
         bool qKey = false;
 

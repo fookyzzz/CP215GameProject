@@ -36,13 +36,16 @@ namespace GameProject
         SoundBuffer bufferPlant = new SoundBuffer("../../../Resource/Plant.wav");
         SoundBuffer bufferError = new SoundBuffer("../../../Resource/Error.ogg");
 
-        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy)
+        bool isRaining;
+
+        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRainning)
         {
             //this.fragments = fragments;
             this.inventory = inventory;
             this.tileMap = tileMap;
             this.tileMapOverlay = tileMapOverlay;
             this.redHatBoy = redHatBoy;
+            this.isRaining = isRaining;
 
             plants = new List<Plant>();
             inventory.OnClick += Inventory_OnClick;
@@ -86,6 +89,11 @@ namespace GameProject
             sound.Play();
         }
 
+        public void SetIsRaining(bool isRaining)
+        {
+            this.isRaining = isRaining;
+        }
+
         public bool CheckTileForPlant()
         {
             Vector2i index = tileMapOverlay.CalcIndex(redHatBoy.Position);
@@ -107,15 +115,15 @@ namespace GameProject
         public void AddPlant(int tileCode, Vector2i index)
         {
             if (tileCode == carrotSproutCode)
-                plants.Add(new Plant("Carrot", 3, false, index));
+                plants.Add(new Plant("Carrot", 3, isRaining, index));
             if (tileCode == cabbageSproutCode)
-                plants.Add(new Plant("Cabbage", 5, false, index));
+                plants.Add(new Plant("Cabbage", 5, isRaining, index));
             if (tileCode == radishSproutCode)
-                plants.Add(new Plant("Radish", 7, false, index));
+                plants.Add(new Plant("Radish", 7, isRaining, index));
             if (tileCode == strawberrySproutCode)
-                plants.Add(new Plant("Strawberry", 9, false, index));
+                plants.Add(new Plant("Strawberry", 9, isRaining, index));
             if (tileCode == cornSproutCode)
-                plants.Add(new Plant("Corn", 15, false, index));
+                plants.Add(new Plant("Corn", 15, isRaining, index));
             SetTileForPlant(tileCode);
         }
 
@@ -185,6 +193,15 @@ namespace GameProject
             }
         }
 
+        public void UpdatePlantWaterStatus()
+        {
+            for (int i = 0; i < plants.Count; i++)
+            {
+                if (isRaining)
+                    plants[i].waterStatus = true;
+            }
+        }
+
         public void UpdatePlantWaterStatus(Vector2i index)
         {
             for (int i = 0; i < plants.Count; i++)
@@ -213,12 +230,11 @@ namespace GameProject
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
                 }
-                if (plants[i].tileIndex == index && plants[i].dayRemain <= -2)
+                else if (plants[i].tileIndex == index && plants[i].dayRemain <= -2)
                 {
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
                 }
-
             }
         }
 
