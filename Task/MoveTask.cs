@@ -9,7 +9,6 @@ namespace GameLib
         private float duration;
         private bool started;
         private float accumulator;
-        private bool finished;
 
         public MoveTask(KinematicBody body, Vector2f v, float duration)
         {
@@ -17,37 +16,32 @@ namespace GameLib
             this.v = v;  // Bug: ปัญหาคือ เมื่อสร้าง mover จะ set V เลย ทั้งที่จริงๆ ยังไม่ได้เริ่มทำงาน
             this.duration = duration;
             started = false;
-            finished = false;
         }
 
-        public void Start()
+        public Task Start()
         {
             body.V = v;
             accumulator = 0.0f;
             started = true;
-        }
-
-        private bool IsStart()
-        {
-            return started;
+            return this;
         }
 
         public override void PhysicsUpdate(float fixTime)
         {
-            if(!IsStart() || finished) 
+            if(IsStop()) 
                 return;
 
             accumulator += fixTime;
             if (accumulator >= duration)
             {
                 body.V = new Vector2f();
-                finished = true;
+                started = false;
             }
         }
 
-        public bool IsFinish()
+        public bool IsStop()
         {
-            return finished;
+            return !started;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using GameLib.Internal;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System;
@@ -7,7 +8,10 @@ namespace GameLib
 {
     public class GameWindow : RenderWindow
     {
-        public float PixelPerUnit { get; set; } = 1;
+        private bool keyRepeatEnabled = true;
+        private uint framerateLimit = 0;
+        private float _pixelPerUnit = 1;
+        public float PixelPerUnit { get { return _pixelPerUnit; } set { _pixelPerUnit = value; AdjustView(); } }
         private Vector2f fixWorldSize = new Vector2f(0, 0);
 
         private Vector2f _center = new Vector2f(); // ในรูปของ world (game) coordinate
@@ -76,9 +80,10 @@ namespace GameLib
             }
         }
         //----------------------------------------
-        public CollisionDetection CollisionDetectionUnit { get; } = new CollisionDetection();
+        public CollisionDetection CollisionDetectionUnit { get; private set; } = new CollisionDetection();
         private Group allObjs = new Group();
-        public GameWindow(VideoMode mode, string title) : this(mode, title, Styles.Default, false)
+        public static bool DefaultAntialias = false;
+        public GameWindow(VideoMode mode, string title) : this(mode, title, Styles.Default, DefaultAntialias)
         {
         }
         public GameWindow(VideoMode mode, string title, bool antialias) : this(mode, title, Styles.Default, antialias)
@@ -108,6 +113,18 @@ namespace GameLib
                 context.AntialiasingLevel = 8;
             return context;
         }
+        public override void SetKeyRepeatEnabled(bool enable)
+        {
+            keyRepeatEnabled = enable;
+            base.SetKeyRepeatEnabled(enable);
+        }
+
+        public override void SetFramerateLimit(uint limit)
+        {
+            framerateLimit = limit;
+            base.SetFramerateLimit(limit);
+        }
+
 
         private void GameWindow_MouseMoved(object? sender, MouseMoveEventArgs e)
         {
@@ -233,6 +250,32 @@ namespace GameLib
         {
             var window = (RenderWindow)sender!;
             window.Close();
+        }
+
+        internal GameWindowMemento GetMemento()
+        {
+            var m = new GameWindowMemento()
+            {
+                KeyRepeatEnabled = this.keyRepeatEnabled,
+                FramerateLimit = this.framerateLimit,
+                BackgroundColor = this.BackgroundColor,
+                UnusedSpaceColor = this.UnusedSpaceColor,
+                PixelPerUnit = this.PixelPerUnit,
+                FixWorldSize = this.fixWorldSize,
+                CollisionDetectionUnit = this.CollisionDetectionUnit,
+            };
+            return m;
+        }
+
+        internal void SetMemento(GameWindowMemento m)
+        {
+            SetKeyRepeatEnabled(m.KeyRepeatEnabled);
+            SetFramerateLimit(m.FramerateLimit);
+            BackgroundColor = m.BackgroundColor;
+            UnusedSpaceColor = m.UnusedSpaceColor;
+            PixelPerUnit = m.PixelPerUnit;
+            FixWorldSize(m.FixWorldSize);
+            CollisionDetectionUnit = m.CollisionDetectionUnit;
         }
     }
 }

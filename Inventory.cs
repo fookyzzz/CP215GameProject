@@ -116,6 +116,11 @@ namespace GameLib
             SetCount(index, GetCount(index) + delta);
         }
 
+        public TileMap<T> GetTileMap()
+        {
+            return tileMap;
+        }
+
         public override void Draw(RenderTarget target, RenderStates states)
         {
             base.Draw(target, states);

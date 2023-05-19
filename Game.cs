@@ -16,7 +16,7 @@ namespace GameProject
 {
     public class Game : BlankEntity
     {
-        GameWindow window = new GameWindow(new VideoMode(1280, 720), "WoLF: World of Lovely Farm");
+        FullGameWindow window = new FullGameWindow(new VideoMode(1280, 720), "WoLF: World of Lovely Farm", true);
         Group allObjs = new Group();
         Group visual = new Group();
         FragmentArray fragments;
@@ -33,10 +33,13 @@ namespace GameProject
         Vector2f scalingVector = new Vector2f(scaling, scaling);
 
         CreateInventory inventory;
+        Planting planting;
 
         Money money;
         Day day;
         ImageButton sleepBtn;
+        RectangleEntity rect;
+        Animation rainAnimation;
 
         Music music = new Music("../../../Resource/Sound_Music_2.ogg");
         public Game()
@@ -63,15 +66,17 @@ namespace GameProject
             var spriteShop = new SpriteEntity("../../../Resource/ShopBtnRound.png") { Scale = new Vector2f(0.15f, 0.15f)};
             shopBtn = new ImageButton("", font, 20, spriteShop);
             shopBtn.Position = new Vector2f(-16, 600);
+            shopBtn.ButtonClicked += ShopBtn_ButtonClicked;
             visual.Add(shopBtn);
 
             //allObjs.Add(new SoundTest());
 
             //Inventory
-            inventory = new CreateInventory(fragments,tileMap, tileMapOverlay, redHatBoy, tileSize);
+            inventory = new CreateInventory(fragments);
             inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
 
             //Planting
+            planting = new Planting(inventory.GetInventory(), tileMap, tileMapOverlay, redHatBoy);
 
             //Money
             money = new Money();
@@ -85,18 +90,71 @@ namespace GameProject
             //Day
             day = new Day();
 
+            //Sleep Button
             var spriteSleep = new SpriteEntity("../../../Resource/Sleep.png") { Scale = new Vector2f(0.07f, 0.07f) };
             sleepBtn = new ImageButton("", font, 20, spriteSleep);
             sleepBtn.Position = new Vector2f(1200, -20);
+            sleepBtn.ButtonClicked += SleepBtn_ButtonClicked;
             visual.Add(sleepBtn);
+
+            //Cut Scene For Next Day
+            rect = new RectangleEntity(new Vector2f(1280, 720));
+            rect.FillColor = Color.Transparent;
+
+            //Rain
+            var spriteRain = new SpriteEntity();
+            visual.Add(spriteRain);
+            var texture = TextureCache.Get("../../../Resource/RainSpriteSheet.png");
+            var rainFragments = FragmentArray.Create(texture, 256, 240, 4, 4);
+            rainAnimation = new Animation(spriteRain, rainFragments.SubArray(0, 4), 1.0f);
+            spriteRain.Scale = new Vector2f(5, 3);
+            visual.Add(rainAnimation);
+        }
+
+        private void ShopBtn_ButtonClicked(GenericButton button)
+        {
+            
+        }
+
+        private void SleepBtn_ButtonClicked(GenericButton button)
+        {
+            //FadeOut Effect
+            var transparentColor = Color.Transparent;
+            var fadeOut = new Tween(255, 0, 1f,
+                delegate (float val)
+                {
+                    rect.FillColor = new Color(transparentColor.R, transparentColor.G, transparentColor.B, (byte) val);
+                    //label.TextColor = new Color(0, 0, 0, (byte)val);
+                    //label.BgColor = new Color(bgColor.R, bgColor.G, bgColor.B, (byte)val);
+                });
+            var fadeIn = new Tween(0, 255, 1f,
+                delegate (float val)
+                {
+                    rect.FillColor = new Color(0, 0, 0, (byte) val);
+                    //label.TextColor = new Color(0, 0, 0, (byte)val);
+                    //label.BgColor = new Color(255, 255, 255, (byte)val);
+                });
+
+            var task = new CallBackTask( delegate { planting.UpdatePlantForNextDay(); });
+            var task2 = new CallBackTask( delegate { day.Increment(); });
+            var task3 = new DelayTask(3);
+            var task4 = new CallBackTask(delegate { redHatBoy.Position = new Vector2f(tileSize * 3, tileSize * 2); });
+            var seqTask = new SequentialTask(fadeIn, task, task2, task3, task4, fadeOut);
+            visual.Add(seqTask);
+            seqTask.Start();
+
+            //Random Rain or Clear
         }
 
         public void GameMain()
         {
             allObjs.Add(visual);
             allObjs.Add(inventory);
+            allObjs.Add(planting);
             allObjs.Add(money);
             allObjs.Add(day);
+            allObjs.Add(rect);
+            allObjs.Add(new FullScreenToggler(window));
             allObjs.Add(this);
             //visual.Add(CreateTile(2));
             
@@ -104,7 +162,8 @@ namespace GameProject
             //SlideShow();
             var icon = new Image("../../../Resource/farm_icon.png");
 
-            window.SetIcon(icon.Size.X, icon.Size.Y, icon.Pixels);
+            window.FixWorldSize(new Vector2f(1280, 720));
+            //window.SetIcon(icon.Size.X, icon.Size.Y, icon.Pixels);
             window.SetKeyRepeatEnabled(false);
             window.RunGameLoop(allObjs);
         }

@@ -21,11 +21,8 @@ namespace GameLib
             tasks = newTask;
         }
 
-        public void Start()
+        public Task Start()
         {
-            if (IsStart())
-                return;
-
             current = 0;
             if (tasks.Length > 0)
             {
@@ -33,11 +30,7 @@ namespace GameLib
                 this.forwardToObj = t;
                 t.Start();
             }
-        }
-
-        private bool IsStart()
-        {
-            return current != -1;
+            return this;
         }
 
         public override void PhysicsUpdate(float fixTime)
@@ -48,12 +41,12 @@ namespace GameLib
 
         private void NextTask()
         {
-            if (!IsStart())
+            if (IsStop())
                 return;
             if (current >= tasks.Length)
                 return; // finish
 
-            if (tasks[current].IsFinish())
+            if (tasks[current].IsStop())
             {
                 current++;
                 if (current >= tasks.Length)
@@ -67,9 +60,9 @@ namespace GameLib
             }
         }
 
-        public bool IsFinish()
+        public bool IsStop()
         {
-            return (current >= tasks.Length);
+            return current == -1 || current >= tasks.Length;
         }
     }
 }

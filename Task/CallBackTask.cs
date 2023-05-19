@@ -5,21 +5,23 @@ namespace GameLib
     public class CallBackTask : BlankEntity, Task
     {
         private Trigger.VoidFunc func;
-        private bool finish = false;
+        private bool stop = true;
 
         public CallBackTask(Trigger.VoidFunc func)
         {
             this.func = func;
         }
 
-        public void Start()
+        public Task Start()
         {
+            stop = false;
             func();
-            finish = true;
+            stop = true;
+            return this;
         }
-        public bool IsFinish()
+        public bool IsStop()
         {
-            return finish;
+            return stop;
         }
     }
 }

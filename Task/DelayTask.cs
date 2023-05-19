@@ -5,43 +5,35 @@ namespace GameLib
     public class DelayTask : BlankEntity, Task
     {
         private float duration;
-        private bool started;
         private float accumulator;
-        private bool finished;
+        private bool stopped;
 
         public DelayTask(float duration)
         {
             this.duration = duration;
-            started = false;
-            finished = false;
+            stopped = true;
         }
 
-        public void Start()
+        public Task Start()
         {
             accumulator = 0.0f;
-            started = true;
-        }
-
-        private bool IsStart()
-        {
-            return started;
+            stopped = false;
+            return this;
         }
 
         public override void PhysicsUpdate(float fixTime)
         {
-            if(!IsStart() || finished) 
+            if(IsStop()) 
                 return;
 
             accumulator += fixTime;
             if (accumulator >= duration)
-            {
-                finished = true;
-            }
+                stopped = true;
         }
 
-        public bool IsFinish()
+        public bool IsStop()
         {
-            return finished;
+            return stopped;
         }
     }
 }
