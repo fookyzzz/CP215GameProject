@@ -24,7 +24,7 @@ namespace GameProject
         TileMap<SpriteEntity> tileMapOverlay;
         Player player;
         RedHatBoy redHatBoy;
-        ImageButton testButton;
+        ImageButton shopBtn;
         
         Font font = new Font(FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"));
 
@@ -32,9 +32,11 @@ namespace GameProject
         const int tileSize = 16 * scaling;
         Vector2f scalingVector = new Vector2f(scaling, scaling);
 
-        InventoryTest inventory;
+        CreateInventory inventory;
 
-        Score score;
+        Money money;
+        Day day;
+        ImageButton sleepBtn;
 
         Music music = new Music("../../../Resource/Sound_Music_2.ogg");
         public Game()
@@ -52,44 +54,49 @@ namespace GameProject
             tileMapOverlay = new GameSceneOverlay().GetTileMap();
             visual.Add(tileMapOverlay);
 
-            //player = new Player(scalingVector);
-            //player.Position = new Vector2f(tileSize * 2, tileSize * 2);
-            //visual.Add(player);
-
             //Player
             redHatBoy = new RedHatBoy(scalingVector/scaling, tileMap, tileMapOverlay, tileSize);
             redHatBoy.Position = new Vector2f(tileSize * 3, tileSize * 2);
             visual.Add(redHatBoy);
 
             //Shop Button
-            var shopBtn = new SpriteEntity("../../../Resource/ShopBtnRound.png") { Scale = new Vector2f(0.15f, 0.15f)};
-            testButton = new ImageButton("", font, 20, shopBtn);
-            testButton.Position = new Vector2f(-16, 600);
-            visual.Add(testButton);
+            var spriteShop = new SpriteEntity("../../../Resource/ShopBtnRound.png") { Scale = new Vector2f(0.15f, 0.15f)};
+            shopBtn = new ImageButton("", font, 20, spriteShop);
+            shopBtn.Position = new Vector2f(-16, 600);
+            visual.Add(shopBtn);
 
-            allObjs.Add(new SoundTest());
+            //allObjs.Add(new SoundTest());
 
             //Inventory
-            inventory = new InventoryTest(fragments,tileMap, tileMapOverlay, redHatBoy, tileSize);
+            inventory = new CreateInventory(fragments,tileMap, tileMapOverlay, redHatBoy, tileSize);
             inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
 
             //Planting
 
-            //Score
-            score = new Score();
-            score.Position = new Vector2f(0, 0);
-            visual.Add(score);
+            //Money
+            money = new Money();
+            money.MoneyValue = 9990; //Initial Money Value
 
             //Music
             music.Loop = true;
             music.Volume = 20;
             music.Play();
+
+            //Day
+            day = new Day();
+
+            var spriteSleep = new SpriteEntity("../../../Resource/Sleep.png") { Scale = new Vector2f(0.07f, 0.07f) };
+            sleepBtn = new ImageButton("", font, 20, spriteSleep);
+            sleepBtn.Position = new Vector2f(1200, -20);
+            visual.Add(sleepBtn);
         }
 
         public void GameMain()
         {
             allObjs.Add(visual);
             allObjs.Add(inventory);
+            allObjs.Add(money);
+            allObjs.Add(day);
             allObjs.Add(this);
             //visual.Add(CreateTile(2));
             
@@ -127,6 +134,36 @@ namespace GameProject
             return sprite;
         }
 
-        //Planting
+        bool qKey = false;
+
+        //Test with KeyPressedEvent
+        public override void KeyPressed(KeyEventArgs e)
+        {
+            base.KeyPressed(e);
+            //Test Increment and Decrement Money
+            if (e.Code == Keyboard.Key.Q)
+                qKey = true;                 
+            if (e.Code == Keyboard.Key.E)
+                money.CheckBeforeDecrement(10);
+        }
+        public override void KeyReleased(KeyEventArgs e)
+        {
+            base.KeyReleased(e);    
+            if (e.Code == Keyboard.Key.Q)
+                qKey = false;
+        }
+
+        //public override void FrameUpdate(float deltaTime)
+        //{
+        //    base.FrameUpdate(deltaTime);
+            
+        //}
+
+        public override void PhysicsUpdate(float fixTime)
+        {
+            base.PhysicsUpdate(fixTime);
+            if (qKey)
+                money.Increment(10);
+        }
     }
 }

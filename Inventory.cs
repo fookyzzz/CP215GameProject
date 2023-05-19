@@ -30,12 +30,12 @@ namespace GameLib
             highlight.index = new Vector2i(0, 0);
         }
 
-        public override void KeyPressed(KeyEventArgs e)
-        {
-            base.KeyPressed(e);
-            if (e.Code == Keyboard.Key.Space)
-                OnClick(highlight.index);
-        }
+        //public override void KeyPressed(KeyEventArgs e)
+        //{
+        //    base.KeyPressed(e);
+        //    if (e.Code == Keyboard.Key.Space)
+        //        OnClick(highlight.index);
+        //}
 
         public override void MouseWheelScrolled(MouseWheelScrollArguments e)
         {
@@ -44,13 +44,13 @@ namespace GameLib
             {
                 if ((highlight.index - new Vector2i(0, 1)).Y < 0)
                     return;
-                highlight.index = highlight.index - new Vector2i(0, 1);
+                highlight.index -= new Vector2i(0, 1);
             }
             else
             {
                 if ((highlight.index + new Vector2i(0, 1)).Y > counts.GetLength(0) - 1)
                     return;
-                highlight.index = highlight.index + new Vector2i(0, 1);
+                highlight.index += new Vector2i(0, 1);
             }
         }
 
@@ -67,14 +67,28 @@ namespace GameLib
         //        highlight.index = index;
         //}
 
-        //public override void MouseButtonPressed(MouseButtonArguments e)
-        //{
-        //    base.MouseButtonPressed(e);
-        //    if (tileMap.IsOutside(highlight.index))
-        //        return;
+        public override void MouseButtonPressed(MouseButtonArguments e)
+        {
+            base.MouseButtonPressed(e);
+            if (e.Button == Mouse.Button.Left)
+            {
+                var inverseTransform = tileMap.GlobalTransform.GetInverse();
+                var pointInTilemap = inverseTransform.TransformPoint(e.Point);
+                var index = tileMap.CalcIndex(pointInTilemap);
 
-        //    OnClick(highlight.index);
-        //}
+                if (tileMap.IsOutside(index))
+                    return;
+                else
+                    highlight.index = index;
+            }
+            if (e.Button == Mouse.Button.Right)
+                OnClick(highlight.index);
+
+            //if (tileMap.IsOutside(highlight.index))
+            //    return;
+
+            //OnClick(highlight.index);
+        }
 
         public void SetItem(Vector2i index, int itemCode, int count)
         {

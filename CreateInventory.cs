@@ -4,11 +4,12 @@ using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Game14
 {
-    public class InventoryTest : Group
+    public class CreateInventory : Group
     {
         Inventory<SpriteEntity> inventory;
         FragmentArray fragments;
@@ -28,7 +29,7 @@ namespace Game14
         SoundBuffer bufferPlant = new SoundBuffer("../../../Resource/Plant.wav");
         SoundBuffer bufferError = new SoundBuffer("../../../Resource/Error.ogg");
 
-        public InventoryTest(FragmentArray fragments, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize)
+        public CreateInventory(FragmentArray fragments, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize)
         {
             inventory = new Inventory<SpriteEntity>(56, CreateArray(), CreateTile);
             inventory.Position = new Vector2f(0, 0);
@@ -53,7 +54,6 @@ namespace Game14
             this.tileMapOverlay = tileMapOverlay;
             this.tileMap = tileMap;
             this.redHatBoy = redHatBoy;
-            this.tileSize = tileSize;
 
             plant = new Planting(fragments);
         }
@@ -98,37 +98,58 @@ namespace Game14
             }
 
             if (index == new Vector2i(0, 0))
-                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, carrotSproutCode);
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, carrotSproutCode);
             if (index == new Vector2i(0, 1))
-                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cabbageSproutCode);
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, cabbageSproutCode);
             if (index == new Vector2i(0, 2))
-                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, radishSproutCode);
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, radishSproutCode);
             if (index == new Vector2i(0, 3))
-                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, strawberrySproutCode);
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, strawberrySproutCode);
             if (index == new Vector2i(0, 4))
-                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, tileSize, cornSproutCode);
+                plant.SetTileForPlant(tileMap, tileMapOverlay, redHatBoy, cornSproutCode);
             inventory.AdjustCount(index, -1);
             sound = new Sound(bufferPlant);
             sound.Play();
         }
 
+        Group group;
+        SequentialTask seqTask;
+
         private void ShowMessage(string message)
         {
-            var group = new Group();
+            if (group != null && seqTask != null)
+            {
+                if (!seqTask.IsFinish())
+                {
+                    Remove(seqTask);
+                    Remove(group);
+                }
+            }
+            group = new Group();
             var font = FontCache.Get("../../../Resource/DSN_Sukumwit.ttf");
-            var label = new Label(message, font, 50) { Position = new Vector2f(500, 500) };
+            var label = new Label(message, font, 50) { Position = new Vector2f(1280 / 2, 580), TextColor = Color.Black,  };
             group.Add(label);
+            
+            //Add(group);
 
-            Add(group);
-
-            var task = new DelayTask(2);
-            var task2 = new CallBackTask( delegate { Remove(group); });
-            var seqTask = new SequentialTask(task, task2);
+            var task = new CallBackTask( delegate { Add(group); });
+            var task2 = new DelayTask(2);
+            var task3 = new CallBackTask( delegate { Remove(group); });
+            seqTask = new SequentialTask(task, task2, task3);
             Add(seqTask);
             seqTask.Start();
 
             //group.Remove(label);
             //Add(group);
         }
+
+        //private bool CheckTaskStatus()
+        //{
+        //    if (!seqTask.IsFinish())
+        //    {
+        //        Remove(seqTask);
+        //        return
+        //    }
+        //}
     }
 }

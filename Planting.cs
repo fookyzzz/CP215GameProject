@@ -40,7 +40,7 @@ namespace GameProject
             return true;
         }
 
-        public void SetTileForPlant(TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileSize, int tileCode)
+        public void SetTileForPlant(TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, int tileCode)
         {
             tileMapOverlay.SetTile(tileMapOverlay.CalcIndex(redHatBoy.Position), tileCode);
         }

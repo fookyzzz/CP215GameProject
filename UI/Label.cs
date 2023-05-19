@@ -46,6 +46,7 @@ namespace GameLib
         private void Update()
         {
             this.Clear();
+
             var text = new TextEntity(StrText, _font, fontSize);
             text.FillColor = TextColor;
 
@@ -60,6 +61,10 @@ namespace GameLib
                             new Vector2f(bgHorSize,
                                         text.TotalHeight() + 2 * VMargin));
             rect.FillColor = BgColor;
+
+            //Center Origin
+            text.Origin = new Vector2f(text.TotalWidth() / 2, text.TotalHeight() / 2);
+            rect.Origin = new Vector2f(bgHorSize / 2, (text.TotalHeight() + 2 * VMargin) / 2);
 
             this.Add(rect);
             this.Add(text);
