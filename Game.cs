@@ -17,11 +17,12 @@ namespace GameProject
     public class Game : BlankEntity
     {
         FullGameWindow window = new FullGameWindow(new VideoMode(1280, 720), "WoLF: World of Lovely Farm", true);
-        enum GameState { MainWindow, OnPlay, OnPause, OnWait}
+        public enum GameState { MainWindow, OnPlay, OnPause, OnWait}
         GameState state;
         Group allObjs = new Group();
         Group visual = new Group();
         Group visualRain;
+        //Group visualUiShop = new Group();
         FragmentArray fragments;
         TileMap<SpriteEntity> tileMap;
         TileMap<SpriteEntity> tileMapOverlay;
@@ -44,7 +45,12 @@ namespace GameProject
         RectangleEntity rect;
         Animation rainAnimation;
         SpriteEntity spriteRain;
+        UIShop uiShop;
         bool isRaining = false;
+
+        SpriteEntity mainMenuBg;
+        ImageButton playBtn, exitGameBtn;
+        Group menuGroup;
 
         Music music = new Music("../../../Resource/Sound_Music_2.ogg");
         Music rainEffect = new Music("../../../Resource/LightRainEffect.ogg");
@@ -80,8 +86,11 @@ namespace GameProject
             inventory = new CreateInventory(fragments);
             inventory.Position = new Vector2f(tileSize * 1.05f, tileSize * 1.6f);
 
+            //Experience Level
+            exp = new Experience();
+
             //Planting
-            planting = new Planting(inventory.GetInventory(), tileMap, tileMapOverlay, redHatBoy, isRaining);
+            planting = new Planting(inventory.GetInventory(), tileMap, tileMapOverlay, redHatBoy, isRaining, exp);
 
             //Money
             money = new Money();
@@ -117,14 +126,66 @@ namespace GameProject
             //RainEffect
             rainEffect.Loop = true;
 
-            //Experience Level
-            exp = new Experience();
+            //UiShop
+            uiShop = new UIShop(exp, inventory.GetInventory(), money);
+            uiShop.Position = new Vector2f(1280 / 2, 720 / 2);
+            uiShop.Origin = new Vector2f(640 / 2, 360 / 2);
+            uiShop.Scale = new Vector2f(1.25f, 1.25f);
 
+            var exitBtn = new ImageButton("", FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"), 20, new SpriteEntity(TextureCache.Get("../../../Resource/UIShop/ExitShopBtn.png")));
+            exitBtn.Position = new Vector2f(640 - 30, 20);
+            exitBtn.ButtonClicked += ShopBtn_ButtonClicked;
+            uiShop.Add(exitBtn);
+            //visual.Add(uiShop);
+
+            //MainMenu Window
+            menuGroup = new Group();
+            //Background
+            mainMenuBg = new SpriteEntity(TextureCache.Get("../../../Resource/BackgroundMenu.png"));
+            //PlayButton
+            var texturePlayBtn = TextureCache.Get("../../../Resource/ButtonPlay.png");
+            playBtn = new ImageButton("", font, 20, new SpriteEntity(texturePlayBtn));
+            playBtn.Position = new Vector2f(1280 / 2 + 15, 720 - 330);
+            playBtn.Origin = new Vector2f(texturePlayBtn.Size.X / 2, texturePlayBtn.Size.Y / 2);
+            playBtn.ButtonClicked += PlayBtn_ButtonClicked;
+            //ExitButton
+            var textureExitBtn = TextureCache.Get("../../../Resource/ButtonExit.png");
+            exitGameBtn = new ImageButton("", font, 20, new SpriteEntity(textureExitBtn));
+            exitGameBtn.Position = new Vector2f(1280 / 2 - 5, 720 - 190);
+            exitGameBtn.Origin = new Vector2f(textureExitBtn.Size.X / 2, textureExitBtn.Size.Y / 2);
+            exitGameBtn.ButtonClicked += ExitGameBtn_ButtonClicked;
+            menuGroup.Add(mainMenuBg);
+            menuGroup.Add(playBtn);
+            menuGroup.Add(exitGameBtn);
+
+        }
+
+        private void ExitGameBtn_ButtonClicked(GenericButton button)
+        {
+            System.Environment.Exit(0);
+        }
+
+        private void PlayBtn_ButtonClicked(GenericButton button)
+        {
+            if (allObjs.Contains(menuGroup))
+                allObjs.Remove(menuGroup);
+            var bufferSliding = new SoundBuffer("../../../Resource/SlidingEffect.ogg");
+            var sound = new Sound(bufferSliding);
+            sound.Volume = 50;
+            sound.Play();
         }
 
         private void ShopBtn_ButtonClicked(GenericButton button)
         {
-            
+            if (allObjs.Contains(uiShop))  //Check Entity in AllObjs
+                allObjs.Remove(uiShop);
+            else
+                allObjs.Add(uiShop);
+            var sound = new Sound(new SoundBuffer("../../../Resource/ShopEffect.ogg"));
+            sound.Volume = 50;
+            var seqTask = new SequentialTask(new CallBackTask( delegate { sound.Play(); }), new DelayTask(3));
+            allObjs.Add(seqTask);
+            seqTask.Start();
         }
 
         private void SleepBtn_ButtonClicked(GenericButton button)
@@ -198,7 +259,9 @@ namespace GameProject
             allObjs.Add(money);
             allObjs.Add(day);
             allObjs.Add(exp);
+            //allObjs.Add(uiShop);
             allObjs.Add(rect);
+            allObjs.Add(menuGroup);
             allObjs.Add(new FullScreenToggler(window));
             allObjs.Add(this);
             //visual.Add(CreateTile(2));

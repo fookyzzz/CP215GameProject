@@ -23,6 +23,7 @@ namespace GameProject
         Inventory<SpriteEntity> inventory;
         TileMap<SpriteEntity> tileMap, tileMapOverlay;
         Group redHatBoy;
+        Experience exp;
         const int carrotSproutCode = 37;
         const int cabbageSproutCode = 42;
         const int radishSproutCode = 47;
@@ -38,7 +39,7 @@ namespace GameProject
 
         bool isRaining;
 
-        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRaining)
+        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRaining, Experience exp)
         {
             //this.fragments = fragments;
             this.inventory = inventory;
@@ -46,6 +47,7 @@ namespace GameProject
             this.tileMapOverlay = tileMapOverlay;
             this.redHatBoy = redHatBoy;
             this.isRaining = isRaining;
+            this.exp = exp;
 
             plants = new List<Plant>();
             inventory.OnClick += Inventory_OnClick;
@@ -216,8 +218,20 @@ namespace GameProject
             {
                 if (plants[i].tileIndex == index && plants[i].drynessValue < 3)
                 {
+                    if (plants[i].waterStatus)
+                    {
+                        ShowMessage("  Already watered  ");
+                        sound = new Sound(bufferError);
+                        sound.Play();
+                        return;
+                    }    
                     plants[i].waterStatus = true;
                     plants[i].drynessValue = 0;
+                    sound = new Sound(new SoundBuffer("../../../Resource/WateringEffect.ogg"));
+                    var task = new CallBackTask(delegate { sound.Play(); });
+                    var task2 = new DelayTask(2);
+                    var task3 = new CallBackTask(delegate { sound.Stop(); });
+                    Add(new SequentialTask(task, task2, task3).Start());
                 }        
             }
         }
@@ -228,16 +242,45 @@ namespace GameProject
             {
                 if (plants[i].tileIndex == index && (plants[i].dayRemain == 0 || plants[i].dayRemain == -1))
                 {
+                    var randNumber = RandomUtil.Next(1, 4);
                     if (plants[i].plantName == "Carrot")
-                        inventory.AdjustCount(new Vector2i(0, 5), RandomUtil.Next(1, 4));
-                    if (plants[i].plantName == "Cabbage")
-                        inventory.AdjustCount(new Vector2i(0, 6), RandomUtil.Next(1, 4));
-                    if (plants[i].plantName == "Radish")
-                        inventory.AdjustCount(new Vector2i(0, 7), RandomUtil.Next(1, 4));
-                    if (plants[i].plantName == "Strawberry")
-                        inventory.AdjustCount(new Vector2i(0, 8), RandomUtil.Next(1, 4));
-                    if (plants[i].plantName == "Corn")
-                        inventory.AdjustCount(new Vector2i(0, 9), RandomUtil.Next(1, 4));
+                    {
+                        //Debug.WriteLine("Before Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                        inventory.AdjustCount(new Vector2i(0, 5), randNumber);
+                        exp.Increment((int) MathF.Round(randNumber * 100 * exp.ExperienceRate));
+                        //Debug.WriteLine("After Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                    }
+                    else if (plants[i].plantName == "Cabbage")
+                    {
+                        //Debug.WriteLine("Before Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                        inventory.AdjustCount(new Vector2i(0, 6), randNumber);
+                        exp.Increment((int)MathF.Round(randNumber * 500 * exp.ExperienceRate));
+                        //Debug.WriteLine("After Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                    }
+                        
+                    else if (plants[i].plantName == "Radish")
+                    {
+                        //Debug.WriteLine("Before Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                        inventory.AdjustCount(new Vector2i(0, 7), randNumber);
+                        exp.Increment((int)MathF.Round(randNumber * 1000 * exp.ExperienceRate));
+                        //Debug.WriteLine("After Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                    }
+                        
+                    else if (plants[i].plantName == "Strawberry")
+                    {
+                        //Debug.WriteLine("Before Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                        inventory.AdjustCount(new Vector2i(0, 8), randNumber);
+                        exp.Increment((int)MathF.Round(randNumber * 5000 * exp.ExperienceRate));
+                        //Debug.WriteLine("After Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                    }
+                        
+                    else if (plants[i].plantName == "Corn")
+                    {
+                        //Debug.WriteLine("Before Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                        inventory.AdjustCount(new Vector2i(0, 9), randNumber);
+                        exp.Increment((int)MathF.Round(randNumber * 20000 * exp.ExperienceRate));
+                        //Debug.WriteLine("After Update Exp: " + exp.ExperienceValue + " Exp Rate: " + exp.ExperienceRate + " Level: " + exp.LevelValue);
+                    } 
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
                     sound = new Sound(bufferPlant);
@@ -248,6 +291,12 @@ namespace GameProject
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
                     sound = new Sound(bufferPlant);
+                    sound.Play();
+                }
+                else if (plants[i].tileIndex == index && (plants[i].dayRemain > 0 && plants[i].drynessValue < 3))
+                {
+                    ShowMessage("  Can’t harvest yet  ");
+                    sound = new Sound(bufferError);
                     sound.Play();
                 }
             }
