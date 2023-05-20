@@ -38,7 +38,7 @@ namespace GameProject
 
         bool isRaining;
 
-        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRainning)
+        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRaining)
         {
             //this.fragments = fragments;
             this.inventory = inventory;
@@ -115,15 +115,15 @@ namespace GameProject
         public void AddPlant(int tileCode, Vector2i index)
         {
             if (tileCode == carrotSproutCode)
-                plants.Add(new Plant("Carrot", 3, isRaining, index));
+                plants.Add(new Plant("Carrot", 3, isRaining, 1, index));
             if (tileCode == cabbageSproutCode)
-                plants.Add(new Plant("Cabbage", 5, isRaining, index));
+                plants.Add(new Plant("Cabbage", 5, isRaining, 1, index));
             if (tileCode == radishSproutCode)
-                plants.Add(new Plant("Radish", 7, isRaining, index));
+                plants.Add(new Plant("Radish", 7, isRaining, 1, index));
             if (tileCode == strawberrySproutCode)
-                plants.Add(new Plant("Strawberry", 9, isRaining, index));
+                plants.Add(new Plant("Strawberry", 9, isRaining, 1, index));
             if (tileCode == cornSproutCode)
-                plants.Add(new Plant("Corn", 15, isRaining, index));
+                plants.Add(new Plant("Corn", 15, isRaining, 1, index));
             SetTileForPlant(tileCode);
         }
 
@@ -135,6 +135,11 @@ namespace GameProject
                 {
                     plants[i].dayRemain -= 1;
                     plants[i].waterStatus = false;
+                    //plants[i].drynessValue = 0;
+                }
+                else
+                {
+                    plants[i].drynessValue += 1;
                 }
 
             }
@@ -151,7 +156,7 @@ namespace GameProject
                         SetTileForPlant(plants[i].tileIndex, 36);
                     if (plants[i].dayRemain == 0)
                         SetTileForPlant(plants[i].tileIndex, 35);
-                    if (plants[i].dayRemain <= -2)
+                    if (plants[i].dayRemain <= -2 || plants[i].drynessValue >= 3)
                         SetTileForPlant(plants[i].tileIndex, 12);
                 }
                 if (plants[i].plantName == "Cabbage")
@@ -160,7 +165,7 @@ namespace GameProject
                         SetTileForPlant(plants[i].tileIndex, 41);
                     if (plants[i].dayRemain == 0)
                         SetTileForPlant(plants[i].tileIndex, 40);
-                    if (plants[i].dayRemain <= -2)
+                    if (plants[i].dayRemain <= -2 || plants[i].drynessValue >= 3)
                         SetTileForPlant(plants[i].tileIndex, 12);
                 }
                 if (plants[i].plantName == "Radish")
@@ -169,7 +174,7 @@ namespace GameProject
                         SetTileForPlant(plants[i].tileIndex, 46);
                     if (plants[i].dayRemain == 0)
                         SetTileForPlant(plants[i].tileIndex, 45);
-                    if (plants[i].dayRemain <= -2)
+                    if (plants[i].dayRemain <= -2 || plants[i].drynessValue >= 3)
                         SetTileForPlant(plants[i].tileIndex, 12);
                 }
                 if (plants[i].plantName == "Strawberry")
@@ -178,7 +183,7 @@ namespace GameProject
                         SetTileForPlant(plants[i].tileIndex, 51);
                     if (plants[i].dayRemain == 0)
                         SetTileForPlant(plants[i].tileIndex, 50);
-                    if (plants[i].dayRemain <= -2)
+                    if (plants[i].dayRemain <= -2 || plants[i].drynessValue >= 3)
                         SetTileForPlant(plants[i].tileIndex, 12);
                 }
                 if (plants[i].plantName == "Corn")
@@ -187,7 +192,7 @@ namespace GameProject
                         SetTileForPlant(plants[i].tileIndex, 56);
                     if (plants[i].dayRemain == 0)
                         SetTileForPlant(plants[i].tileIndex, 55);
-                    if (plants[i].dayRemain <= -2)
+                    if (plants[i].dayRemain <= -2 || plants[i].drynessValue >= 3)
                         SetTileForPlant(plants[i].tileIndex, 12);
                 }
             }
@@ -197,8 +202,11 @@ namespace GameProject
         {
             for (int i = 0; i < plants.Count; i++)
             {
-                if (isRaining)
+                if (isRaining && plants[i].drynessValue < 3)
+                {
                     plants[i].waterStatus = true;
+                    plants[i].drynessValue = 0;
+                }      
             }
         }
 
@@ -206,8 +214,11 @@ namespace GameProject
         {
             for (int i = 0; i < plants.Count; i++)
             {
-                if (plants[i].tileIndex == index)
-                    plants[i].waterStatus = true; 
+                if (plants[i].tileIndex == index && plants[i].drynessValue < 3)
+                {
+                    plants[i].waterStatus = true;
+                    plants[i].drynessValue = 0;
+                }        
             }
         }
 
@@ -229,11 +240,15 @@ namespace GameProject
                         inventory.AdjustCount(new Vector2i(0, 9), RandomUtil.Next(1, 4));
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
+                    sound = new Sound(bufferPlant);
+                    sound.Play();
                 }
-                else if (plants[i].tileIndex == index && plants[i].dayRemain <= -2)
+                else if (plants[i].tileIndex == index && (plants[i].dayRemain <= -2 || plants[i].drynessValue >= 3))
                 {
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
+                    sound = new Sound(bufferPlant);
+                    sound.Play();
                 }
             }
         }

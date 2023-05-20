@@ -17,13 +17,14 @@ namespace GameProject
     public class Game : BlankEntity
     {
         FullGameWindow window = new FullGameWindow(new VideoMode(1280, 720), "WoLF: World of Lovely Farm", true);
+        enum GameState { MainWindow, OnPlay, OnPause, OnWait}
+        GameState state;
         Group allObjs = new Group();
         Group visual = new Group();
         Group visualRain;
         FragmentArray fragments;
         TileMap<SpriteEntity> tileMap;
         TileMap<SpriteEntity> tileMapOverlay;
-        //Player player;
         RedHatBoy redHatBoy;
         ImageButton shopBtn;
         
@@ -38,6 +39,7 @@ namespace GameProject
 
         Money money;
         Day day;
+        Experience exp;
         ImageButton sleepBtn;
         RectangleEntity rect;
         Animation rainAnimation;
@@ -45,6 +47,8 @@ namespace GameProject
         bool isRaining = false;
 
         Music music = new Music("../../../Resource/Sound_Music_2.ogg");
+        Music rainEffect = new Music("../../../Resource/LightRainEffect.ogg");
+        Sound soundCock = new Sound(new SoundBuffer("../../../Resource/CockEffect.ogg"));
         public Game()
         {
             visual.Position = new Vector2f(tileSize / 2, tileSize / 2);
@@ -105,25 +109,17 @@ namespace GameProject
             //Rain
             spriteRain = new SpriteEntity();
             spriteRain.Position = new Vector2f(80, 30);
-            //visualRain = new Group();
-            //visualRain.Add(spriteRain);
             var texture = TextureCache.Get("../../../Resource/RainSpriteSheet.png");
             var rainFragments = FragmentArray.Create(texture, 256, 240, 4, 4);
             rainAnimation = new Animation(spriteRain, rainFragments.SubArray(0, 4), 1.0f);
             spriteRain.Scale = new Vector2f(5, 3);
-            //visualRain.Add(rainAnimation);
-            //visual.Add(visualRain);
 
-            //Initial Rain Status
-            //if (RandomUtil.Next(0, 2) == 0)
-            //{
-            //    isRainning = false;
-            //    visual.Remove(visualRain);
-            //}
-            //else
-            //{
-            //    isRainning = true;
-            //}
+            //RainEffect
+            rainEffect.Loop = true;
+
+            //Experience Level
+            exp = new Experience();
+
         }
 
         private void ShopBtn_ButtonClicked(GenericButton button)
@@ -151,6 +147,7 @@ namespace GameProject
 
             var task = new CallBackTask( delegate { planting.UpdatePlantForNextDay(); });
             var task2 = new CallBackTask( delegate { day.Increment(); });
+            var task3_0 = new CallBackTask(delegate { soundCock.Play(); });
             var task3 = new DelayTask(3);
             var task4 = new CallBackTask(delegate { redHatBoy.Position = new Vector2f(tileSize * 3, tileSize * 2); });
             var task5_0 = new CallBackTask(delegate
@@ -172,20 +169,22 @@ namespace GameProject
                 visualRain.Add(rainAnimation);
             });
             var task5_1 = new CallBackTask(delegate { visual.Add(visualRain); });
-            var task5_2 = new CallBackTask(delegate { visual.Remove(visualRain); });
+            //var task5_2 = new CallBackTask(delegate { visual.Remove(visualRain); });
             var task6_1 = new CallBackTask(delegate { isRaining = true; });
             var task6_2 = new CallBackTask(delegate { isRaining = false; });
             var task7 = new CallBackTask(delegate { planting.SetIsRaining(isRaining); });
             var task8 = new CallBackTask(delegate { planting.UpdatePlantWaterStatus(); });
+            var task9_1 = new CallBackTask(delegate { rainEffect.Play(); });
+            var task9_2 = new CallBackTask(delegate { rainEffect.Stop(); });
             if (RandomUtil.Next(0, 5) != 4)
             {
-                var seqTask = new SequentialTask(fadeIn, task, task2, task3, task4, task5_0, task6_2, task7, task8, fadeOut);
+                var seqTask = new SequentialTask(fadeIn, task, task2, task3_0, task3, task4, task5_0, task6_2, task7, task8, task9_2, fadeOut);
                 visual.Add(seqTask);
                 seqTask.Start();
             }
             else
             {
-                var seqTask = new SequentialTask(fadeIn, task, task2, task3, task4, task5_0, task5_1, task6_1, task7, task8, fadeOut);
+                var seqTask = new SequentialTask(fadeIn, task, task2, task3_0, task3, task4, task5_0, task5_1, task6_1, task7, task8, task9_1, fadeOut);
                 visual.Add(seqTask);
                 seqTask.Start();
             }
@@ -198,6 +197,7 @@ namespace GameProject
             allObjs.Add(planting);
             allObjs.Add(money);
             allObjs.Add(day);
+            allObjs.Add(exp);
             allObjs.Add(rect);
             allObjs.Add(new FullScreenToggler(window));
             allObjs.Add(this);
@@ -205,11 +205,12 @@ namespace GameProject
             
 
             //SlideShow();
-            var icon = new Image("../../../Resource/farm_icon.png");
+            //var icon = new Image("../../../Resource/farm_icon.png");
 
             window.FixWorldSize(new Vector2f(1280, 720));
             //window.SetIcon(icon.Size.X, icon.Size.Y, icon.Pixels);
             window.SetKeyRepeatEnabled(false);
+            window.ToggleFullScreen();
             window.RunGameLoop(allObjs);
         }
 
@@ -239,6 +240,7 @@ namespace GameProject
         //}
 
         bool qKey = false;
+        bool fKey = false;
 
         //Test with KeyPressedEvent
         public override void KeyPressed(KeyEventArgs e)
@@ -249,12 +251,16 @@ namespace GameProject
                 qKey = true;                 
             if (e.Code == Keyboard.Key.E)
                 money.CheckBeforeDecrement(10);
+            if (e.Code == Keyboard.Key.F)
+                fKey = true;
         }
         public override void KeyReleased(KeyEventArgs e)
         {
             base.KeyReleased(e);    
             if (e.Code == Keyboard.Key.Q)
                 qKey = false;
+            if (e.Code == Keyboard.Key.F)
+                fKey= false;
         }
 
         //public override void FrameUpdate(float deltaTime)
@@ -268,6 +274,8 @@ namespace GameProject
             base.PhysicsUpdate(fixTime);
             if (qKey)
                 money.Increment(10);
+            if (fKey)
+                exp.Increment(1000);
         }
     }
 }

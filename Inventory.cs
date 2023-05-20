@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using SFML.Audio;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System;
@@ -15,6 +16,9 @@ namespace GameLib
 
         public delegate void Click(Vector2i index);
         public event Click OnClick = delegate {};
+
+        Sound sound;
+        SoundBuffer bufferSliding = new SoundBuffer("../../../Resource/SlidingEffect.ogg");
         public Inventory(int slotSize, int[,] tileArray,
             TileMap<T>.CreateTileDelegate<T> createTile) 
         {
@@ -52,6 +56,9 @@ namespace GameLib
                     return;
                 highlight.index += new Vector2i(0, 1);
             }
+            sound = new Sound(bufferSliding);
+            sound.Volume = 50;
+            sound.Play();
         }
 
         //public override void MouseMoved(MouseMoveArguments e)
@@ -79,7 +86,12 @@ namespace GameLib
                 if (tileMap.IsOutside(index))
                     return;
                 else
+                {
                     highlight.index = index;
+                    sound = new Sound(bufferSliding);
+                    sound.Volume = 50;
+                    sound.Play();
+                }
             }
             if (e.Button == Mouse.Button.Right)
                 OnClick(highlight.index);
