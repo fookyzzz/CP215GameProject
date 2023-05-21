@@ -213,7 +213,7 @@ namespace GameProject
                     plants[i].drynessValue = 0;
                     sound = new Sound(new SoundBuffer("../../../Resource/WateringEffect.ogg"));
                     var task = new CallBackTask(delegate { sound.Play(); });
-                    var task2 = new DelayTask(2);
+                    var task2 = new DelayTask(1);
                     var task3 = new CallBackTask(delegate { sound.Stop(); });
                     Add(new SequentialTask(task, task2, task3).Start());
                 }        
