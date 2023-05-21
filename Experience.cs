@@ -53,7 +53,7 @@ namespace GameLib
                 LevelValue = 7;
             else if (ExperienceValue >= 400000 && ExperienceValue < 600000) //Unlock Corn
                 LevelValue = 8;
-            else if (ExperienceValue >= 600000 && ExperienceValue < 999999) //Unlock Trophy (Optional)
+            else if (ExperienceValue >= 600000 && ExperienceValue < 999999)
                 LevelValue = 9;
             else if (ExperienceValue >= 999999) //Infinity Level
                 LevelValue = 10;

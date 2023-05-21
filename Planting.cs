@@ -15,15 +15,12 @@ namespace GameProject
 {
     public class Planting : Group
     {
-        //TileMap<SpriteEntity> tileMap, tileMapOverlay;
-        //Group redHatBoy;
-        //int tileSize;
-        //InventoryTest inventory;
-        //FragmentArray fragments;
         Inventory<SpriteEntity> inventory;
         TileMap<SpriteEntity> tileMap, tileMapOverlay;
         Group redHatBoy;
         Experience exp;
+        State state;
+
         const int carrotSproutCode = 37;
         const int cabbageSproutCode = 42;
         const int radishSproutCode = 47;
@@ -39,24 +36,24 @@ namespace GameProject
 
         bool isRaining;
 
-        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRaining, Experience exp)
+        public Planting(Inventory<SpriteEntity> inventory,TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, Group redHatBoy, bool isRaining, Experience exp, State state)
         {
-            //this.fragments = fragments;
             this.inventory = inventory;
             this.tileMap = tileMap;
             this.tileMapOverlay = tileMapOverlay;
             this.redHatBoy = redHatBoy;
             this.isRaining = isRaining;
             this.exp = exp;
+            this.state = state;
 
             plants = new List<Plant>();
-            inventory.OnClick += Inventory_OnClick;
         }
 
-        private void Inventory_OnClick(Vector2i index)
+        private void Planting_OnClick(Vector2i index)
         {
             if (index.Y > 4)
                 return;
+
             if (!CheckTileForPlant())
             {
                 ShowMessage("  Can't plant here  ");
@@ -72,20 +69,7 @@ namespace GameProject
                 return;
             }
 
-            //Debug.WriteLine(inventory.GetTileMap().GetTileCode(index) - 2);
             AddPlant(inventory.GetTileMap().GetTileCode(index) - 2, tileMapOverlay.CalcIndex(redHatBoy.Position));
-
-            //if (index == new Vector2i(0, 0))
-            //    plant.SetTileForPlant(tileMapOverlay, redHatBoy, carrotSproutCode);
-            //if (index == new Vector2i(0, 1))
-            //    plant.SetTileForPlant(tileMapOverlay, redHatBoy, cabbageSproutCode);
-            //if (index == new Vector2i(0, 2))
-            //    plant.SetTileForPlant(tileMapOverlay, redHatBoy, radishSproutCode);
-            //if (index == new Vector2i(0, 3))
-            //    plant.SetTileForPlant(tileMapOverlay, redHatBoy, strawberrySproutCode);
-            //if (index == new Vector2i(0, 4))
-            //    plant.SetTileForPlant(tileMapOverlay, redHatBoy, cornSproutCode);
-
             inventory.AdjustCount(index, -1);
             sound = new Sound(bufferPlant);
             sound.Play();
@@ -332,9 +316,20 @@ namespace GameProject
         {
             base.KeyPressed(e);
             if (e.Code == Keyboard.Key.Space)
-                HarvestPlant(tileMapOverlay.CalcIndex(redHatBoy.Position));
-            if (e.Code == Keyboard.Key.R)
                 UpdatePlantWaterStatus(tileMapOverlay.CalcIndex(redHatBoy.Position));
+        }
+
+        public override void MouseButtonPressed(MouseButtonArguments e)
+        {
+            base.MouseButtonPressed(e);
+            if (state.state != GameState.OnPlay)
+                return;
+
+            var tileIndex = tileMapOverlay.CalcIndex(redHatBoy.Position);
+            if (e.Button == Mouse.Button.Right && tileMapOverlay.GetTileCode(tileIndex) == 168)
+                Planting_OnClick(inventory.highlight.index);
+            else if (e.Button == Mouse.Button.Right && tileMapOverlay.GetTileCode(tileIndex) != 168)
+                HarvestPlant(tileMapOverlay.CalcIndex(redHatBoy.Position));
         }
     }
 }

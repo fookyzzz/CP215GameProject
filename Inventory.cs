@@ -10,15 +10,13 @@ namespace GameLib
         where T : Transformable, Entity
     {
         int tileSize = 100;
-        TileMap<T> tileMap;
-        Highlight highlight;
-        int[,] counts;
+        public TileMap<T> tileMap;
+        public Highlight highlight;
+        public int[,] counts;
 
         public delegate void Click(Vector2i index);
         public event Click OnClick = delegate {};
 
-        Sound sound;
-        SoundBuffer bufferSliding = new SoundBuffer("../../../Resource/SlidingEffect.ogg");
         public Inventory(int slotSize, int[,] tileArray,
             TileMap<T>.CreateTileDelegate<T> createTile) 
         {
@@ -32,74 +30,6 @@ namespace GameLib
             Add(highlight);
 
             highlight.index = new Vector2i(0, 0);
-        }
-
-        //public override void KeyPressed(KeyEventArgs e)
-        //{
-        //    base.KeyPressed(e);
-        //    if (e.Code == Keyboard.Key.Space)
-        //        OnClick(highlight.index);
-        //}
-
-        public override void MouseWheelScrolled(MouseWheelScrollArguments e)
-        {
-            base.MouseWheelScrolled(e);
-            if (e.Delta > 0)
-            {
-                if ((highlight.index - new Vector2i(0, 1)).Y < 0)
-                    return;
-                highlight.index -= new Vector2i(0, 1);
-            }
-            else
-            {
-                if ((highlight.index + new Vector2i(0, 1)).Y > counts.GetLength(0) - 1)
-                    return;
-                highlight.index += new Vector2i(0, 1);
-            }
-            sound = new Sound(bufferSliding);
-            sound.Volume = 50;
-            sound.Play();
-        }
-
-        //public override void MouseMoved(MouseMoveArguments e)
-        //{
-        //    base.MouseMoved(e);
-        //    var inverseTransform = tileMap.GlobalTransform.GetInverse();
-        //    var pointInTilemap = inverseTransform.TransformPoint(e.Point);
-        //    var index = tileMap.CalcIndex(pointInTilemap);
-
-        //    if (tileMap.IsOutside(index))
-        //        highlight.index = new Vector2i(-1, -1);
-        //    else
-        //        highlight.index = index;
-        //}
-
-        public override void MouseButtonPressed(MouseButtonArguments e)
-        {
-            base.MouseButtonPressed(e);
-            if (e.Button == Mouse.Button.Left)
-            {
-                var inverseTransform = tileMap.GlobalTransform.GetInverse();
-                var pointInTilemap = inverseTransform.TransformPoint(e.Point);
-                var index = tileMap.CalcIndex(pointInTilemap);
-
-                if (tileMap.IsOutside(index))
-                    return;
-                else
-                {
-                    highlight.index = index;
-                    sound = new Sound(bufferSliding);
-                    sound.Volume = 50;
-                    sound.Play();
-                }
-            }
-            if (e.Button == Mouse.Button.Right)
-                OnClick(highlight.index);
-
-            //if (tileMap.IsOutside(highlight.index))
-            //    return;
-
-            //OnClick(highlight.index);
         }
 
         public void SetItem(Vector2i index, int itemCode, int count)

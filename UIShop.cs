@@ -8,28 +8,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static GameProject.Game;
 
 namespace GameProject
 {
     public class UIShop : Group
     {
-        //Texture textureBg = new Texture(TextureCache.Get("../../../Resource/UIShop/Background_Shop.png"));
-        SpriteEntity spriteUiShopBg, spriteAlert;
+
+        SpriteEntity spriteUiShopBg;
         List<ImageButton> imgBtnNum1List;
         List<ImageButton> imgBtnNum5List;
         List<ImageButton> imgBtnNum10List;
-        //btn1ForSellCarrot, btn5ForSellCarrot, btn10ForSellCarrot, btn1ForBuyCarrot, btn5ForBuyCarrot, btn10ForBuyCarrot,
-        //btn1ForSellCabbage, btn5ForSellCabbage, btn10ForSellCabbage, btn1ForBuyCabbage, btn5ForBuyCabbage, btn10ForBuyCabbage,
-        //btn1ForSellRadish, btn5ForSellRadish, btn10ForSellRadish, btn1ForBuyRadish, btn5ForBuyRadish, btn10ForBuyRadish,
-        //btn1ForSellStrawberry, btn5ForSellStrawberry, btn10ForSellStrawberry, btn1ForBuyStrawberry, btn5ForBuyStrawberry, btn10ForBuyStrawberry,
-        //btn1ForSellCorn, btn5ForSellCorn, btn10ForSellCorn, btn1ForBuyCorn, btn5ForBuyCorn, btn10ForBuyCorn, exitBtn;
-        ImageButton exitBtn;
-
-        Label
-            carrotSellPriceLabel, carrotBuyPriceLabel, cabbageSellPriceLabel, cabbageBuyPriceLabel, radishSellPriceLabel, radishBuyPriceLabel,
-            strawberrySellPriceLabel, strawberryBuyPriceLabel, cornSellPriceLabel, cornBuyPriceLabel;
-        int carrotSellPrice, carrotBuyPrice, cabbageSellPrice, cabbageBuyPrice, radishSellPrice, radishBuyPrice, strawberrySellPrice, strawberryBuyPrice, cornSellPrice, cornBuyPrice;
 
         int[] sellPrice;
         int[] buyPrice;
@@ -40,7 +28,6 @@ namespace GameProject
         Experience exp;
         Inventory<SpriteEntity> inventory;
         Money money;
-        //GameState state;
 
         Font font = FontCache.Get("../../../Resource/DSN_Sukumwit.ttf");
         Sound sound;
@@ -55,7 +42,6 @@ namespace GameProject
             this.exp = exp;
             this.inventory = inventory;
             this.money = money;
-            //this.state = state;
 
             var textureBg = TextureCache.Get("../../../Resource/UIShop/Background_Shop.png");
             spriteUiShopBg = new SpriteEntity(textureBg);
@@ -124,17 +110,6 @@ namespace GameProject
             imgBtnNum10List[8].ButtonClicked += delegate { BtnBuy_ButtonClicked(10, "Strawberry"); };
             imgBtnNum10List[9].ButtonClicked += delegate { BtnBuy_ButtonClicked(10, "Corn"); };
 
-            //carrotSellPrice = 15;
-            //carrotBuyPrice = 10;
-            //cabbageSellPrice = 75;
-            //cabbageBuyPrice = 50;
-            //radishSellPrice = 250;
-            //radishBuyPrice = 200;
-            //strawberrySellPrice = 750;
-            //strawberryBuyPrice = 500;
-            //cornSellPrice = 1500;
-            //cornBuyPrice = 1000;
-
             sellPrice = new int[]{ 15, 75, 250, 750, 1500 };
             buyPrice = new int[]{ 10, 50, 200, 500, 1000 };
 
@@ -153,27 +128,7 @@ namespace GameProject
                 buyPriceLabel[i].BgColor = Color.Transparent;
                 buyPriceLabel[i].Position = new Vector2f(102 + (108 * i), (textureBg.Size.Y) - 92);
                 Add(buyPriceLabel[i]);
-
-                //sellPriceLabel[i].StrText = //Set Text Require Level ... to Unlock
             }
-
-            //exitBtn = new ImageButton("", FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"), 20, new SpriteEntity(TextureCache.Get("../../../Resource/UIShop/ExitShopBtn.png")));
-            //exitBtn.Position = new Vector2f(textureBg.Size.X - 30, 20);
-            //Add(exitBtn);
-
-            //Debug.WriteLine(imgBtnNum1List.Count.ToString() + imgBtnNum5List.Count.ToString() + imgBtnNum10List.Count.ToString());
-            //btn1ForSellCarrot = btn1ForBuyCarrot = btn1ForSellCabbage = btn1ForBuyCabbage =
-            //    btn1ForSellRadish = btn1ForBuyRadish = btn1ForSellStrawberry = btn1ForBuyStrawberry = 
-            //    btn1ForSellCorn = btn1ForBuyCorn = new ImageButton("", FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"), 20, new SpriteEntity(TextureCache.Get("../../../Resource/UIShop/Number1Btn.png")));
-            //btn5ForSellCarrot = btn5ForBuyCarrot = btn5ForSellCabbage = btn5ForBuyCabbage =
-            //    btn5ForSellRadish = btn5ForBuyRadish = btn5ForSellStrawberry = btn5ForBuyStrawberry =
-            //    btn5ForSellCorn = btn5ForBuyCorn = new ImageButton("", FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"), 20, new SpriteEntity(TextureCache.Get("../../../Resource/UIShop/Number5Btn.png")));
-            //btn10ForSellCarrot = btn10ForBuyCarrot = btn10ForSellCabbage = btn10ForBuyCabbage =
-            //    btn10ForSellRadish = btn10ForBuyRadish = btn10ForSellStrawberry = btn10ForBuyStrawberry =
-            //    btn10ForSellCorn = btn10ForBuyCorn = new ImageButton("", FontCache.Get("../../../Resource/DSN_Sukumwit.ttf"), 20, new SpriteEntity(TextureCache.Get("../../../Resource/UIShop/Number10Btn.png")));
-
-            //btn1ForSellCarrot.Position
-            //Add(btn1ForSellCarrot);
 
         }
 
@@ -388,11 +343,9 @@ namespace GameProject
                 }
             }
             group = new Group();
-            //var font = FontCache.Get("../../../Resource/DSN_Sukumwit.ttf");
             var spriteAlert = new SpriteEntity(texture);
             spriteAlert.Position = new Vector2f(640 / 2, 360 / 2);
             spriteAlert.Origin = new Vector2f(texture.Size.X / 2, texture.Size.Y / 2);
-            //var label = new Label(message, font, 50) { Position = new Vector2f(1280 / 2, 640), TextColor = Color.Black, };
             group.Add(spriteAlert);
 
             var task = new CallBackTask(delegate { Add(group); });
@@ -403,11 +356,28 @@ namespace GameProject
             seqTask.Start();
         }
 
-        //spriteUiShopBg.Position = new Vector2f(1280 / 2, 720 / 2);
-        //spriteUiShopBg.Origin = new Vector2f(textureBg.Size.X / 2, textureBg.Size.Y / 2);
-        //spriteUiShopBg.Scale = new Vector2f(1.25f, 1.25f);
-        //visualUiShop.Add(spriteUiShopBg);
-
+        public void UpdateBuyLabel()
+        {
+            for (int i = 0; i < buyPriceLabel.Count; i++)
+            {
+                if (i == 1 && exp.LevelValue < 3)
+                    buyPriceLabel[i].StrText = "Unlock Lv 3";
+                else if (i == 1 && exp.LevelValue >= 3)
+                    buyPriceLabel[i].StrText = "Buy: " + buyPrice[i].ToString() + "$";
+                else if (i == 2 && exp.LevelValue < 5)
+                    buyPriceLabel[i].StrText = "Unlock Lv 5";
+                else if (i == 2 && exp.LevelValue >= 5)
+                    buyPriceLabel[i].StrText = "Buy: " + buyPrice[i].ToString() + "$";
+                else if (i == 3 && exp.LevelValue < 7)
+                    buyPriceLabel[i].StrText = "Unlock Lv 7";
+                else if (i == 3 && exp.LevelValue >= 7)
+                    buyPriceLabel[i].StrText = "Buy: " + buyPrice[i].ToString() + "$";
+                else if (i == 4 && exp.LevelValue < 8)
+                    buyPriceLabel[i].StrText = "Unlock Lv 8";
+                else if (i == 4 && exp.LevelValue >= 8)
+                    buyPriceLabel[i].StrText = "Buy: " + buyPrice[i].ToString() + "$";
+            }
+        }
 
     }
 }

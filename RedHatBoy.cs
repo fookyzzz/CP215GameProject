@@ -1,10 +1,12 @@
 ﻿using Game11;
 using GameLib;
+using GameProject;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,15 +24,17 @@ namespace Game07
         TileMap<SpriteEntity> tileMap;
         TileMap<SpriteEntity> tileMapOverlay;
         int tileSize;
+        State state;
 
         SoundBuffer bufferWalk = new SoundBuffer("../../../Resource/Walk.ogg");
         Sound sound;
 
-        public RedHatBoy(Vector2f scalingVector, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, int tileSize)
+        public RedHatBoy(Vector2f scalingVector, TileMap<SpriteEntity> tileMap, TileMap<SpriteEntity> tileMapOverlay, int tileSize, State state)
         {
             this.tileMap = tileMap;
             this.tileMapOverlay = tileMapOverlay;
             this.tileSize = tileSize;
+            this.state = state;
 
             sound = new Sound(bufferWalk);
 
@@ -70,35 +74,20 @@ namespace Game07
             last = animation;
         }
 
-        //public override void FrameUpdate(float deltaTime)
-        //{
-        //    base.FrameUpdate(deltaTime);
-        //    var direction = DirectionKey.Normalized;
-
-        //    if (direction.X < 0)
-        //        Animate(left);
-        //    else if (direction.X > 0)
-        //        Animate(right);
-        //    else if (direction.Y < 0)
-        //        Animate(up);
-        //    else if (direction.Y > 0)
-        //        Animate(down);
-        //    else
-        //        Animate(stay);
-
-        //    V = direction * 480;
-        //}
-
         public override void KeyPressed(KeyEventArgs e)
         {
             base.KeyPressed(e);
-            //StepJumpMovement(e);
+            if (state.state != GameState.OnPlay)
+                return;
             keyQueue.Enqueue(e);
             SmoothMovement();
         }
 
         private void SmoothMovement()
         {
+            if (state.state != GameState.OnPlay)
+                return;
+
             if (!motion.IsFinished())
             {
                 if (sound.Status == SoundStatus.Stopped)
@@ -137,7 +126,7 @@ namespace Game07
             }
             else
             {
-                Animate(stay); //direction = motion.GetNormalizedDirection();
+                Animate(stay);
                 sound.Stop();
             }
                 
@@ -151,10 +140,6 @@ namespace Game07
 
         private bool IsAllowMove(Vector2f direction)
         {
-            //Check TileMap
-            //Vector2i index = tileMap.CalcIndex(this, direction);
-            //return tileMap.IsInside(index) && IsAllowTile(index);
-
             //Check TileMapOverlay
             Vector2i index = tileMapOverlay.CalcIndex(this, direction);
             return tileMapOverlay.IsInside(index) && IsAllowTile(index);
@@ -162,22 +147,8 @@ namespace Game07
 
         private bool IsAllowTile(Vector2i index)
         {
-            //int tileCode = tileMap.GetTileCode(index);
             int tileCode = tileMapOverlay.GetTileCode(index);
             return
-                //TileSet1
-
-                //WaterTile
-                //tileCode != 6 && tileCode != 7 && tileCode != 8 && tileCode != 9 && tileCode != 10 && tileCode != 11 && tileCode != 21 && tileCode != 22 &&
-                //tileCode != 23 && tileCode != 24 && tileCode != 26 && tileCode != 36 && tileCode != 37 && tileCode != 38 && tileCode != 39 && tileCode != 40 &&
-                //tileCode != 41 && tileCode != 189 && tileCode != 190 && tileCode != 191 && tileCode != 192 && tileCode != 193 && tileCode != 194 && tileCode != 204 &&
-                //tileCode != 205 && tileCode != 206 && tileCode != 207 && tileCode != 209 && tileCode != 219 && tileCode != 220 && tileCode != 221 && tileCode != 222 &&
-                //tileCode != 223 && tileCode != 224 && tileCode != 48 &&
-                //RockTile
-                //tileCode != 105 && tileCode != 106 && tileCode != 107 && tileCode != 108 && tileCode != 109 && tileCode != 122 && tileCode != 124 && tileCode != 137 &&
-                //tileCode != 138 && tileCode != 139 && tileCode != 144 && tileCode != 145 && tileCode != 146 && tileCode != 159 && tileCode != 160 && tileCode != 161 &&
-                //tileCode != 174 && tileCode != 175 && tileCode != 176;
-
                 //TileSet2
                 //Fence
                 tileCode != 84 && tileCode != 85 && tileCode != 86 && tileCode != 88 && tileCode != 89 && tileCode != 90 && tileCode != 98 && tileCode != 99 && tileCode != 100 && tileCode != 103 &&
