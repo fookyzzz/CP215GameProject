@@ -221,6 +221,10 @@ namespace GameProject
         private void BackMenuBtn_ButtonClicked(GenericButton button)
         {
             allObjs.Remove(pauseMenu);
+            var bufferSliding = new SoundBuffer("../../../Resource/SlidingEffect.ogg");
+            var sound = new Sound(bufferSliding);
+            sound.Volume = 50;
+            sound.Play();
             var seqTask = new SequentialTask(new DelayTask(0.000001f), new CallBackTask(delegate { MainMenu(); }));
             allObjs.Add(seqTask);
             seqTask.Start();
@@ -232,6 +236,10 @@ namespace GameProject
 
         private void HelpBtn_ButtonClicked(GenericButton button)
         {
+            var bufferSliding = new SoundBuffer("../../../Resource/SlidingEffect.ogg");
+            var sound = new Sound(bufferSliding);
+            sound.Volume = 50;
+            sound.Play();
             state.state = GameState.OnHelp;
             helpGroup = new Group();
             helpWindow = new SpriteEntity(TextureCache.Get("../../../Resource/Tutorial.png"));
@@ -256,6 +264,10 @@ namespace GameProject
         {
             allObjs.Remove(pauseMenu);
             state.state = GameState.OnPlay;
+            var bufferSliding = new SoundBuffer("../../../Resource/SlidingEffect.ogg");
+            var sound = new Sound(bufferSliding);
+            sound.Volume = 50;
+            sound.Play();
         }
 
         private void ExitGameBtn_ButtonClicked(GenericButton button)
