@@ -321,12 +321,12 @@ namespace GameProject
             }
         }
 
-        Group group;
-        SequentialTask seqTask;
+        public Group group;
+        public SequentialTask seqTask;
 
         private void ShowAlert(Texture texture)
         {
-            if (group != null && seqTask != null)
+            if (this.Contains(group) && this.Contains(seqTask))
             {
                 if (!seqTask.IsStop())
                 {

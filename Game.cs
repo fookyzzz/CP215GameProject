@@ -322,6 +322,11 @@ namespace GameProject
 
             if (allObjs.Contains(uiShop))
             {
+                if (uiShop.Contains(uiShop.seqTask) && uiShop.Contains(uiShop.group))
+                {
+                    uiShop.Remove(uiShop.seqTask);
+                    uiShop.Remove(uiShop.group);
+                }
                 allObjs.Remove(uiShop);
                 state.state = GameState.OnPlay;
             }
