@@ -197,6 +197,7 @@ namespace GameProject
             }
         }
 
+        SequentialTask seqTask2;
         public void UpdatePlantWaterStatus(Vector2i index)
         {
             for (int i = 0; i < plants.Count; i++)
@@ -209,14 +210,19 @@ namespace GameProject
                         sound = new Sound(bufferError);
                         sound.Play();
                         return;
-                    }    
+                    }
+                    
+                    if (seqTask2 != null)
+                        Remove(seqTask2);
                     plants[i].waterStatus = true;
                     plants[i].drynessValue = 0;
                     sound = new Sound(new SoundBuffer("../../../Resource/WateringEffect.ogg"));
                     var task = new CallBackTask(delegate { sound.Play(); });
-                    var task2 = new DelayTask(1);
+                    var task2 = new DelayTask(0.5f);
                     var task3 = new CallBackTask(delegate { sound.Stop(); });
-                    Add(new SequentialTask(task, task2, task3).Start());
+                    seqTask2 = new SequentialTask(task, task2, task3);
+                    Add(seqTask2);
+                    seqTask2.Start();
                 }        
             }
         }
