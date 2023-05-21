@@ -134,14 +134,14 @@ namespace GameProject
 
         private void BtnSell_ButtonClicked(int count, string plantName)
         {
-            Debug.WriteLine("Click SellButton Count: " + count + " Plant Name: " + plantName);
+            sound = new Sound(bufferMoney);
+            sound.Volume = 30;
             if (plantName == "Carrot")
             {
                 if (inventory.GetCount(new Vector2i(0, 5)) >= count)
                 {
                     inventory.AdjustCount(new Vector2i(0, 5), -count);
                     money.Increment(sellPrice[0] * count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -157,7 +157,6 @@ namespace GameProject
                 {
                     inventory.AdjustCount(new Vector2i(0, 6), -count);
                     money.Increment(sellPrice[1] * count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -173,7 +172,6 @@ namespace GameProject
                 {
                     inventory.AdjustCount(new Vector2i(0, 7), -count);
                     money.Increment(sellPrice[2] * count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -189,7 +187,6 @@ namespace GameProject
                 {
                     inventory.AdjustCount(new Vector2i(0, 8), -count);
                     money.Increment(sellPrice[3] * count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -205,7 +202,6 @@ namespace GameProject
                 {
                     inventory.AdjustCount(new Vector2i(0, 9), -count);
                     money.Increment(sellPrice[4] * count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -219,13 +215,13 @@ namespace GameProject
 
         private void BtnBuy_ButtonClicked(int count, string plantName)
         {
-            Debug.WriteLine("Click BuyButton Count: " + count + " Plant Name: " + plantName);
+            sound = new Sound(bufferMoney);
+            sound.Volume = 30;
             if (plantName == "Carrot")
             {
                 if (money.CheckBeforeDecrement(buyPrice[0] * count))
                 {
                     inventory.AdjustCount(new Vector2i(0, 0), count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -248,7 +244,6 @@ namespace GameProject
                 if (money.CheckBeforeDecrement(buyPrice[1] * count))
                 {
                     inventory.AdjustCount(new Vector2i(0, 1), count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -271,7 +266,6 @@ namespace GameProject
                 if (money.CheckBeforeDecrement(buyPrice[2] * count))
                 {
                     inventory.AdjustCount(new Vector2i(0, 2), count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -294,7 +288,6 @@ namespace GameProject
                 if (money.CheckBeforeDecrement(buyPrice[3] * count))
                 {
                     inventory.AdjustCount(new Vector2i(0, 3), count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
@@ -317,7 +310,6 @@ namespace GameProject
                 if (money.CheckBeforeDecrement(buyPrice[4] * count))
                 {
                     inventory.AdjustCount(new Vector2i(0, 4), count);
-                    sound = new Sound(bufferMoney);
                     sound.Play();
                 }
                 else
