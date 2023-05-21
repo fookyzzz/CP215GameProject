@@ -17,7 +17,7 @@ namespace GameProject
 {
     public class Game : BlankEntity
     {
-        FullGameWindow window = new FullGameWindow(new VideoMode(1280, 720), "WoLF: World of Lovely Farm", true);
+        FullGameWindow window = new FullGameWindow(new VideoMode(1280, 720), "Farm Luck", true);
         State state;
         Group allObjs = new Group();
         Group visual = new Group();
