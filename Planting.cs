@@ -89,6 +89,16 @@ namespace GameProject
             return true;
         }
 
+        public void SetTileForDrySoil(Vector2i index)
+        {
+            tileMap.SetTile(index, soilCode);
+        }
+
+        public void SetTileForWetSoil(Vector2i index)
+        {
+            tileMap.SetTile(index, 155);
+        }
+
         public void SetTileForPlant(int tileCode)
         {
             tileMapOverlay.SetTile(tileMapOverlay.CalcIndex(redHatBoy.Position), tileCode);
@@ -112,6 +122,8 @@ namespace GameProject
             if (tileCode == cornSproutCode)
                 plants.Add(new Plant("Corn", 15, isRaining, 1, index));
             SetTileForPlant(tileCode);
+            if (isRaining)
+                SetTileForWetSoil(index);
         }
 
         public void UpdatePlantForNextDay()
@@ -193,7 +205,10 @@ namespace GameProject
                 {
                     plants[i].waterStatus = true;
                     plants[i].drynessValue = 0;
-                }      
+                    SetTileForWetSoil(plants[i].tileIndex);
+                }
+                else if (!isRaining && plants[i].drynessValue < 3)
+                    SetTileForDrySoil(plants[i].tileIndex);
             }
         }
 
@@ -216,6 +231,7 @@ namespace GameProject
                         Remove(seqTask2);
                     plants[i].waterStatus = true;
                     plants[i].drynessValue = 0;
+                    tileMap.SetTile(tileMap.CalcIndex(redHatBoy.Position), 155);
                     sound = new Sound(new SoundBuffer("../../../Resource/WateringEffect.ogg"));
                     var task = new CallBackTask(delegate { sound.Play(); });
                     var task2 = new DelayTask(0.5f);
@@ -264,6 +280,7 @@ namespace GameProject
                     } 
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
+                    SetTileForDrySoil(index);
                     sound = new Sound(bufferPlant);
                     sound.Volume = 50;
                     sound.Play();
@@ -272,6 +289,7 @@ namespace GameProject
                 {
                     plants.Remove(plants[i]);
                     SetTileForPlant(168);
+                    SetTileForDrySoil(index);
                     sound = new Sound(bufferPlant);
                     sound.Volume = 50;
                     sound.Play();
