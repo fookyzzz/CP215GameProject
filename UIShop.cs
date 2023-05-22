@@ -110,8 +110,8 @@ namespace GameProject
             imgBtnNum10List[8].ButtonClicked += delegate { BtnBuy_ButtonClicked(10, "Strawberry"); };
             imgBtnNum10List[9].ButtonClicked += delegate { BtnBuy_ButtonClicked(10, "Corn"); };
 
-            sellPrice = new int[]{ 15, 75, 250, 750, 1500 };
-            buyPrice = new int[]{ 10, 50, 200, 500, 1000 };
+            sellPrice = new int[]{ 3, 20, 50, 150, 500 };
+            buyPrice = new int[]{ 2, 10, 20, 50, 100 };
 
             sellPriceLabel = new List<Label>();
             buyPriceLabel = new List<Label>();

@@ -120,7 +120,7 @@ namespace GameProject
             if (tileCode == strawberrySproutCode)
                 plants.Add(new Plant("Strawberry", 9, isRaining, 1, index));
             if (tileCode == cornSproutCode)
-                plants.Add(new Plant("Corn", 15, isRaining, 1, index));
+                plants.Add(new Plant("Corn", 11, isRaining, 1, index));
             SetTileForPlant(tileCode);
             if (isRaining)
                 SetTileForWetSoil(index);
@@ -187,7 +187,7 @@ namespace GameProject
                 }
                 if (plants[i].plantName == "Corn")
                 {
-                    if (plants[i].dayRemain >= 1 && plants[i].dayRemain <= 8)
+                    if (plants[i].dayRemain >= 1 && plants[i].dayRemain <= 6)
                         SetTileForPlant(plants[i].tileIndex, 56);
                     if (plants[i].dayRemain == 0)
                         SetTileForPlant(plants[i].tileIndex, 55);

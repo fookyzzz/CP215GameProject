@@ -31,7 +31,7 @@ namespace GameLib
             else if (ExperienceValue >= 3000 && ExperienceValue < 10000)
             {
                 LevelValue = 2;
-                ExperienceRate = 1.2f; //Add Experience Rate Up
+                ExperienceRate = 1.1f; //Add Experience Rate Up
             }
                 
             else if (ExperienceValue >= 10000 && ExperienceValue < 25000) //Unlock Cabbage
@@ -39,7 +39,7 @@ namespace GameLib
             else if (ExperienceValue >= 25000 && ExperienceValue < 50000)
             {
                 LevelValue = 4;
-                ExperienceRate = 1.5f; //Add Experience Rate Up
+                ExperienceRate = 1.25f; //Add Experience Rate Up
             }
                 
             else if (ExperienceValue >= 50000 && ExperienceValue < 100000) //Unlock Radish
@@ -47,7 +47,7 @@ namespace GameLib
             else if (ExperienceValue >= 100000 && ExperienceValue < 200000)
             {
                 LevelValue = 6;
-                ExperienceRate = 2; //Add Experience Rate Up
+                ExperienceRate = 1.5f; //Add Experience Rate Up
             }
             else if (ExperienceValue >= 200000 && ExperienceValue < 400000) //Unlock Strawberry
                 LevelValue = 7;

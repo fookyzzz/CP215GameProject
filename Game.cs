@@ -94,7 +94,7 @@ namespace GameProject
 
             //Money
             money = new Money();
-            money.MoneyValue = 200; //Initial Money Value
+            money.MoneyValue = 20; //Initial Money Value
 
             //Music
             music.Loop = true;
